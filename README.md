@@ -9,6 +9,10 @@ Pickle installs PHP extensions easily on all platforms.
 [![Build Status](https://travis-ci.org/FriendsOfPHP/pickle.svg?branch=master)](https://travis-ci.org/FriendsOfPHP/pickle)
 
 
+## Compare Upstream
+
+* https://github.com/FriendsOfPHP/pickle/compare/master...khs1994-php:master
+
 Introduction
 ------------
 
