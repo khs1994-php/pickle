@@ -259,7 +259,11 @@ class PHP extends Abstracts\Engine implements Interfaces\Engine
 
     public function getExtensionDir()
     {
-        return $this->extensionDir;
+        if(is_dir($this->extensionDir)){
+            return $this->extensionDir;
+        }
+
+        return dirname($this->getPath()) . DIRECTORY_SEPARATOR . $this->extensionDir;
     }
 
     public function getIniPath()
