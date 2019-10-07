@@ -104,7 +104,11 @@ class PackageXml
 
         $version = new Header\Version($this->package);
         if ($version != $this->package->getPrettyVersion()) {
-            throw new \Exception("Version mismatch - '".$version."' != '".$this->package->getVersion().'. in source vs JSON');
+            $exception = "Version mismatch - '".$version."' != '".$this->package->getVersion().'. in source vs JSON';
+
+            echo $exception;
+
+            // throw new \Exception($exception);
         }
 
         $dumper = new Dumper();

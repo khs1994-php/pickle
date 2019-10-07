@@ -26,6 +26,7 @@
         "ext-openssl": "*",
         "ext-zip": "*",
         "symfony/console": "~2.5",
+        "symfony/finder": "~2.5",
         "justinrainbow/json-schema": "~1.5",
         "composer/composer": "~1.0-alpha8",
         "padraic/phar-updater": "~1.0@dev"
@@ -44,7 +45,6 @@
     },
     "bin": ["bin/pickle"],
     "scripts": {
-        "cs": "php-cs-fixer --ansi fix --config=sf23",
         "build": "box build"
     }
 }

@@ -39,6 +39,7 @@ namespace Pickle\Package\Util\Header;
 use Composer\Package\Version\VersionParser;
 use Pickle\Base\Interfaces;
 use Pickle\Package\Util;
+use Symfony\Component\Finder\Finder;
 
 class Version
 {
@@ -88,20 +89,40 @@ class Version
 
     public function getVersionFromHeader()
     {
-        $headers = glob($this->package->getSourceDir().DIRECTORY_SEPARATOR.'*.h');
+        // $headers = glob($this->package->getSourceDir().DIRECTORY_SEPARATOR.'*.h');
+
+        $finder = new Finder();
+        $headers = $finder->files()
+        ->in($this->package->getSourceDir())
+        ->name('*.h');
 
         // Match versions surrounded by quotes and versions without quotes
         $versionMatcher = '(".*"|.*\b)';
         $pat = ',define\s+'.preg_quote($this->macroName, ',').'\s+'.$versionMatcher.',i';
 
+        // xdebug
+        // #define XDEBUG_VERSION    "2.8.0beta2"
+        $pat2 = ',define\s+'.preg_quote(strtoupper($this->package->getSimpleName())).'_VERSION'.'\s+'.$versionMatcher.',i';
+
         foreach ($headers as $header) {
+            // $header->getRealPath()
             $headerContent = file_get_contents($header);
             if (!$headerContent) {
                 throw new \Exception("Could not read $header");
             }
-            if (preg_match($pat, $headerContent, $result)) {
+            if (preg_match($pat, $headerContent, $result) or preg_match($pat2, $headerContent, $result)) {
                 // Remove any quote characters we may have matched on
-                return trim($result[1], '"');
+                $version = trim($result[1], '"');
+
+                // check version format
+                try{
+                  (new VersionParser())->normalize($version);
+                }catch(\Exception $e){
+                  // 版本号格式不正确
+                  continue;
+                }
+
+                return $version;
             }
         }
         throw new \Exception("Couldn't parse the version defined in the {$this->macroName} macro");

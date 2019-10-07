@@ -8,7 +8,7 @@ php:
   - 7.1
   - 7.2
   - 7.3
-  # - 7.4
+  - 7.4snapshot
   - nightly
 
 matrix:
@@ -32,8 +32,11 @@ script:
 after_script:
   # - php ocular.phar code-coverage:upload --format=php-clover clover.xml
   - chmod +x ./pickle.phar
-  - ./pickle.phar install mongodb --defaults
-  
+  - ls -la pickle.phar
+  - ls -la $(php-config --extension-dir)
+  - ./pickle.phar install mongodb --defaults -n -vvv
+  - ls -la $(php-config --extension-dir)
+
 deploy:
   provider: releases
   api_key: ${GITHUB_TOKEN}
