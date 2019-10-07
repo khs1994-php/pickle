@@ -48,10 +48,14 @@ class Version
     protected $version;
     protected $macroName;
 
-    public function __construct(Interfaces\Package $package)
+    public function getMacroName($prefix = "PHP_"){
+        return $prefix.strtoupper($this->package->getSimpleName()).'_VERSION';
+    }
+
+    public function __construct(?Interfaces\Package $package)
     {
         $this->package = $package;
-        $this->macroName = 'PHP_'.strtoupper($this->package->getSimpleName()).'_VERSION';
+        $this->macroName = $this->getMacroName();
 
         $this->version = $this->getVersionFromHeader();
     }
@@ -102,7 +106,7 @@ class Version
 
         // xdebug
         // #define XDEBUG_VERSION    "2.8.0beta2"
-        $pat2 = ',define\s+'.preg_quote(strtoupper($this->package->getSimpleName())).'_VERSION'.'\s+'.$versionMatcher.',i';
+        $pat2 = ',define\s+'.preg_quote($this->getMacroName(""),',').'\s+'.$versionMatcher.',i';
 
         foreach ($headers as $header) {
             // $header->getRealPath()
@@ -118,7 +122,7 @@ class Version
                 try{
                   (new VersionParser())->normalize($version);
                 }catch(\Exception $e){
-                  // 版本号格式不正确
+                  // 版本号格式不正确,继续遍历(寻找)
                   continue;
                 }
 

@@ -32,10 +32,10 @@ script:
 after_script:
   # - php ocular.phar code-coverage:upload --format=php-clover clover.xml
   - chmod +x ./pickle.phar
-  - ls -la pickle.phar
-  - ls -la $(php-config --extension-dir)
+  - ls -lah pickle.phar
+  - ls -lah $(php-config --extension-dir)
   - ./pickle.phar install mongodb --defaults -n -vvv
-  - ls -la $(php-config --extension-dir)
+  - ls -lah $(php-config --extension-dir)
 
 deploy:
   provider: releases

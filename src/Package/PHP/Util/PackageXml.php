@@ -62,7 +62,11 @@ class PackageXml
         }
 
         if (!$this->xmlPath) {
-            throw new \InvalidArgumentException("The path '$path' doesn't contain package.xml");
+            $exception = "The path '$path' doesn't contain package.xml";
+            echo $exception;
+
+            return;
+            // throw new \InvalidArgumentException($exception);
         }
 
         $this->jsonPath = $path.DIRECTORY_SEPARATOR.'composer.json';
@@ -71,7 +75,14 @@ class PackageXml
     public function load()
     {
         $loader = new Package\PHP\Util\XML\Loader(new Package\Util\Loader());
-        $this->package = $loader->load($this->xmlPath);
+
+        try{
+            $this->package = $loader->load($this->xmlPath);
+        }catch(\Exception $e){
+            echo $e->getMessage();
+
+            return;
+        }
 
         if (!$this->package) {
             throw new \Exception("Failed to load '{$this->xmlPath}'");
