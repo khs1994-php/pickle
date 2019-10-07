@@ -1,41 +1,44 @@
 language: php
-sudo: false
 
 php:
-  - 5.4
-  - 5.5
-  - 5.6
-  - 7.0
-  - hhvm
-  - hhvm-nightly
+  # - 5.4
+  # - 5.5
+  # - 5.6
+  # - 7.0
+  - 7.1
+  - 7.2
+  - 7.3
+  # - 7.4
+  - nightly
 
 matrix:
   allow_failures:
-    - php: hhvm
-    - php: hhvm-nightly
+    - php: nightly
 
 before_script:
+  - export PATH=/home/travis/.config/composer/vendor/bin:$PATH
   - git fetch --unshallow --tags
-  - composer install --prefer-source
+  # - composer install --prefer-source
   - composer global require 'kherge/box=~2.4' --prefer-source
-  - wget https://scrutinizer-ci.com/ocular.phar
+  # - wget https://scrutinizer-ci.com/ocular.phar
 
 script:
-  - php vendor/atoum/atoum/scripts/coverage.php --format xml --output clover.xml
+  # - php vendor/atoum/atoum/scripts/coverage.php --format xml --output clover.xml
   - composer install --no-dev --optimize-autoloader
-  - ~/.composer/vendor/bin/box build
-  - composer install
-  - PICKLE_BEHAT_PROCESS_TIMEOUT=0 vendor/bin/behat --format=progress
+  - composer build
+  # - composer install
+  # - PICKLE_BEHAT_PROCESS_TIMEOUT=0 vendor/bin/behat --format=progress
 
 after_script:
-  - php ocular.phar code-coverage:upload --format=php-clover clover.xml
-
+  # - php ocular.phar code-coverage:upload --format=php-clover clover.xml
+  - chmod +x ./pickle.phar
+  - ./pickle.phar install mongodb --defaults
+  
 deploy:
   provider: releases
-  api_key:
-    secure: S5zmtkDizyJpPIVpJeTuLpLC4/AM5SILXR37wbdIo5GY2yWIdDDZqZ19J5cy0SmqSuYjdYjg8XHQtv0CsZv8gxQX120o/ODwzAtUlPb0PyTvIU2fKaHw8Dcj4ZP/NC9DIItwUYP1JfxubP1sKWPl/GUiZr4HB2ufhUEShWbX0q0=
+  api_key: ${GITHUB_TOKEN}
   file: pickle.phar
   skip_cleanup: true
   on:
     tags: true
-    repo: FriendsOfPHP/pickle
+    php: 7.3
