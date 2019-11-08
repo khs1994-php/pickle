@@ -270,6 +270,8 @@ class InstallerCommand extends BuildCommand
         if((!$php->isWindows) && \file_exists($extensionDir.$path.'.so')){
           $output->writeln('find ext file in '.$extensionDir);
 
+          $output->writeln('<info>php_ini_dir [ '. $phpIniDir .' ] found, write ini</info>');
+
           $ini->updatePickleSectionOnLinux(
               [$path.'.so'],$phpIniDir,$input->getOption('no-write')
           );

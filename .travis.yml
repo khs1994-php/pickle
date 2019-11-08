@@ -34,8 +34,12 @@ after_script:
   - chmod +x ./pickle.phar
   - ls -lah pickle.phar
   - ls -lah $(php-config --extension-dir)
+  - php -m > 1
   - ./pickle.phar install mongodb --defaults -n -vvv
+  - ./pickle.phar install yaml --defaults -n -vvv
   - ls -lah $(php-config --extension-dir)
+  - php -m > 2
+  - diff 1 2
 
 deploy:
   provider: releases
