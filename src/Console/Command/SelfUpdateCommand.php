@@ -29,7 +29,7 @@ class SelfUpdateCommand extends Command
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         $updater = new Updater(null, false, Updater::STRATEGY_GITHUB);
-        $updater->getStrategy()->setPackageName('friendsofphp/pickle');
+        $updater->getStrategy()->setPackageName('khs1994/pickle');
         $updater->getStrategy()->setPharName(self::PHAR_NAME);
         $updater->getStrategy()->setCurrentLocalVersion($this->getApplication()->getVersion());
 
