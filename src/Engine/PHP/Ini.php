@@ -41,6 +41,15 @@ use Pickle\Base\Abstracts;
 
 class Ini extends Abstracts\Engine\Ini implements Interfaces\Engine\Ini
 {
+    private $ZEND_EXTENSION=[
+      'xdebug',
+      'php_xdebug.dll',
+      'xdebug.so',
+      'opcache',
+      'php_opcache.dll',
+      'opcache.so',
+    ];
+
     public function __construct(Interfaces\Engine $php)
     {
         parent::__construct($php);
@@ -68,7 +77,8 @@ class Ini extends Abstracts\Engine\Ini implements Interfaces\Engine\Ini
             requested to be deleted and not already added. */
         foreach ($lines as $l) {
             $l = trim($l);
-            if (0 !== strpos($l, 'extension')) {
+            if (0 !== strpos($l, 'extension') and 0 !== strpos($l, 'zend_extension')) {
+                // 不是以 extension 和 zend_extension 开头
                 continue;
             }
             list(, $dllname) = explode('=', $l);
@@ -126,6 +136,41 @@ class Ini extends Abstracts\Engine\Ini implements Interfaces\Engine\Ini
         }
     }
 
+    protected function isZendExtension($ext){
+        $ext = trim($ext,'.so');
+
+        return \in_array($ext,['xdebug','opcache']);
+    }
+
+    /**
+     * @param exts 'curl.so'
+     */
+    public function updatePickleSectionOnLinux(array $exts_add,$phpIniDir,$no_write){
+        if(!$phpIniDir){
+
+            return;
+        }
+
+        $packageName = $exts_add[0];
+
+        if($this->ge72()){
+            if($pos = \strpos($packageName,'.so')){
+                $pos !== false && $packageName = \substr($packageName,0,$pos);
+            };
+        }
+
+        $phpIniDirContent = ($this->isZendExtension($packageName) ? "zend_" : "")
+            .'extension='.$packageName;
+
+        $phpIniDirFile = $phpIniDir.DIRECTORY_SEPARATOR.'php-ext-'.$packageName.'.ini';
+
+        if($no_write){
+           $phpIniDirFile .= '.default';
+        }
+
+        \file_put_contents($phpIniDirFile,$phpIniDirContent);
+    }
+
     public function updatePickleSection(array $dlls_add, array $dlls_del = array())
     {
         $before = '';
@@ -154,7 +199,43 @@ class Ini extends Abstracts\Engine\Ini implements Interfaces\Engine\Ini
 
     protected function buildDllIniLine($dll)
     {
+        // 7.2 extension=modulename
+
+        // 7.1 extension=php_bz2.dll
+        //     extension=msql.so
+
+        if($this->ge72()){
+            if($pos = \strpos($dll,'.dll')){
+                $pos !== false && $dll = \substr($dll,0,$pos);
+            };
+
+            if($pos = \strpos($dll,'.so')){
+                $pos !== false && $dll = \substr($dll,0,$pos);
+            };
+
+            if(\strpos($dll,'php_') === 0){
+                $dll = \substr($dll,4);
+            }
+        }
+
+        if(\in_array($dll,$this->ZEND_EXTENSION)){
+
+            return 'zend_extension='.$dll;
+        }
+
         return 'extension='.$dll;
+    }
+
+    protected function ge72(){
+        $engine = $this->engine;
+        $major = $engine->getMajorVersion();
+        $minor = $engine->getMinorVersion();
+
+        if(($major >= 7 && $minor >= 2) or $major > 7){
+            return true;
+        }
+
+        return false;
     }
 }
 

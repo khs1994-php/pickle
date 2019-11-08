@@ -13,6 +13,48 @@ Pickle installs PHP extensions easily on all platforms.
 
 * https://github.com/FriendsOfPHP/pickle/compare/master...khs1994-php:master
 
+## path arg
+
+* pecl name (yaml)
+* git url (https://github.com/xdebug/xdebug)
+* local dir (/tmp/yaml)
+
+```bash
+.
+├── 6efa6058386c5a7af3e8f944c716fe27.tar
+├── package.xml
+└── yaml-2.0.4
+```
+
+* archive (https://github.com/xdebug/xdebug/archive/2.8.0.tar.gz)
+
+## convert to composer.json
+
+```json
+{
+    "name": "yaml",
+    "type": "extension",
+    "license": [
+        "MIT"
+    ],
+    "authors": [
+        {
+            "name": "Bryan Davis",
+            "email": "bd808@bd808.com"
+        }
+    ],
+    "description": "YAML-1.1 parser and emitter",
+    "extra": {
+        "configure-options": {
+            "with-yaml": {
+                "default": "autodetect",
+                "prompt": "Please provide the prefix of libyaml installation"
+            }
+        }
+    }
+}
+```
+
 Introduction
 ------------
 

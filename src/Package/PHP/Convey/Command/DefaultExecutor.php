@@ -39,6 +39,7 @@ namespace Pickle\Package\PHP\Convey\Command;
 use Pickle\Base\Interfaces;
 use Pickle\Package\PHP;
 use Pickle\Package\PHP\Util\PackageXml;
+use Symfony\Component\Finder\Finder;
 
 class DefaultExecutor implements Interfaces\Package\Convey\DefaultExecutor
 {
@@ -50,16 +51,37 @@ class DefaultExecutor implements Interfaces\Package\Convey\DefaultExecutor
     {
         $jsonLoader = new \Pickle\Package\Util\JSON\Loader(new \Pickle\Package\Util\Loader());
         $pickle_json = $target.DIRECTORY_SEPARATOR.'composer.json';
+        $package_xml = $target.DIRECTORY_SEPARATOR.'package.xml';
         $package = null;
 
         if (file_exists($pickle_json)) {
             $package = $jsonLoader->load($pickle_json);
         }
 
+        // xml 文件不存在，尝试生成 composer.json
+        if(!file_exists($package_xml)){
+            $files = (new Finder())->in($target)->files()->name('/^php_.*\.h$/');
+            foreach($files as $file){
+                $name = trim(trim($file->getRelativePathname(),'php_'),'.h');
+            }
+
+            $pickle_json_content = \json_encode([
+               'name' => $name,
+               'type' => 'extension',
+               "description" => 'extension not include package.xml, this file is auto generate'
+            ]);
+
+            \file_put_contents($pickle_json,$pickle_json_content);
+
+            $package = $jsonLoader->load($pickle_json);
+        }
+
+        // 从 composer.json 获取 package 失败，并且传入 --no-convert 则退出
         if (null === $package && $no_convert) {
             throw new \RuntimeException('XML package are not supported. Please convert it before install');
         }
 
+        // 从 composer.json 获取 package 失败，从 xml 文件转化
         if (null === $package) {
             $pkgXml = new PackageXml($target);
             $pkgXml->dump();

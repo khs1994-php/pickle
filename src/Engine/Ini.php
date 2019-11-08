@@ -41,7 +41,10 @@ use Pickle\Base\Interfaces;
 class Ini
 {
     protected static $instance = null;
-
+    
+    /**
+     * @return PHP\Ini;
+     */
     public static function factory(Interfaces\Engine $engine = null)
     {
         if (null == self::$instance) {

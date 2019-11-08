@@ -101,7 +101,8 @@ class Unix extends Abstracts\Package\Build implements Interfaces\Package\Build
     {
         $backCwd = getcwd();
         chdir($this->tempDir);
-        $res = $this->runCommand('make');
+        $nproc = exec('nproc');
+        $res = $this->runCommand('make -j '.$nproc);
         chdir($backCwd);
 
         if (!$res) {

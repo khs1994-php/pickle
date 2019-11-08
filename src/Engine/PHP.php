@@ -55,6 +55,8 @@ class PHP extends Abstracts\Engine implements Interfaces\Engine
     private $iniPath;
     private $extensionDir;
     private $hasSdk;
+    private $iniDir;
+    public  $isWindows = false;
 
     public function __construct($phpCli = PHP_BINARY)
     {
@@ -85,10 +87,15 @@ class PHP extends Abstracts\Engine implements Interfaces\Engine
         list($this->version, $this->major, $this->minor, $this->release, $this->extra, $this->zts, $this->debug) = $info;
         $this->zts = (bool) $this->zts;
 
-        if (defined('PHP_WINDOWS_VERSION_MAJOR')) {
-            list($this->compiler, $this->architecture, $this->iniPath, $this->extensionDir) = $this->getFromPhpInfo();
-        } else {
+        // if (defined('PHP_WINDOWS_VERSION_MAJOR')) {
+            list($this->compiler, $this->architecture, $this->iniPath, $this->extensionDir,$this->iniDir) = $this->getFromPhpInfo();
+        // } else {
             /* TODO till now we didn't need his on linux*/
+            // var_dump($this->getFromPhpInfo());
+        // }
+
+        if (defined('PHP_WINDOWS_VERSION_MAJOR')) {
+            $this->isWindows = true;
         }
     }
 
@@ -121,12 +128,15 @@ class PHP extends Abstracts\Engine implements Interfaces\Engine
                 list(, $arch) = explode('=>', $s);
                 break;
             }
+
+            if (0 === strpos($s,'System')){
+                list(, $archInfo) = explode('=>', $s);
+                $archInfoArray = \explode(' ',$archInfo);
+                $arch = array_pop($archInfoArray);
+            }
         }
 
         $arch = trim($arch);
-        if ('' == $arch) {
-            throw new \Exception('Cannot detect PHP build architecture');
-        }
 
         return $arch;
     }
@@ -165,12 +175,34 @@ class PHP extends Abstracts\Engine implements Interfaces\Engine
             }
         }
 
+        if (!defined('PHP_WINDOWS_VERSION_MAJOR')) {
+          return 'Linux';
+        }
+
         $compiler = trim($compiler);
         if ('' == $compiler) {
             throw new \Exception('Cannot detect PHP build compiler version');
         }
 
         return $compiler;
+    }
+
+    private function getIniDirFromPhpInfo($info){
+        $iniDir = '';
+
+        foreach ($info as $s) {
+            if (false !== strpos($s, 'Scan this dir for additional .ini files')) {
+                list(, $iniDir) = explode('=>', $s);
+                break;
+            }
+        }
+
+        $iniDir = trim($iniDir);
+        if ('' == $iniDir) {
+            throw new \Exception('Cannot detect PHP build compiler version');
+        }
+
+        return $iniDir;
     }
 
     private function getFromPhpInfo()
@@ -185,7 +217,7 @@ class PHP extends Abstracts\Engine implements Interfaces\Engine
         $arch = $this->getArchFromPhpInfo($info);
         $iniPath = $this->getIniPathFromPhpInfo($info);
         $extensionDir = $this->getExtensionDirFromPhpInfo($info);
-
+        $iniDir = $this->getIniDirFromPhpInfo($info);
         $compiler = trim(
         strtolower(
             str_replace('MS', '', substr(
@@ -194,7 +226,7 @@ class PHP extends Abstracts\Engine implements Interfaces\Engine
             )
         );
 
-        return [$compiler, $arch, $iniPath, $extensionDir];
+        return [$compiler, $arch, $iniPath, $extensionDir,$iniDir];
     }
 
     public function getName()
@@ -269,6 +301,10 @@ class PHP extends Abstracts\Engine implements Interfaces\Engine
     public function getIniPath()
     {
         return $this->iniPath;
+    }
+
+    public function getIniDir(){
+        return $this->iniDir;
     }
 }
 

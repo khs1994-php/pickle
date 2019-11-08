@@ -50,6 +50,7 @@ use Pickle\Engine;
 use Pickle\Package\Util\Windows;
 use Pickle\Package\Command\Install;
 use Pickle\Base\Util;
+use Pickle\Engine\Ini;
 
 class InstallerCommand extends BuildCommand
 {
@@ -96,6 +97,16 @@ class InstallerCommand extends BuildCommand
                 InputOption::VALUE_REQUIRED,
                 'path to a custom temp dir',
                 sys_get_temp_dir()
+            )->addOption(
+                'force',
+                'f',
+                InputOption::VALUE_NONE,
+                'Force install, don\'t check extension loaded'
+            )->addOption(
+                'no-write',
+                null,
+                InputOption::VALUE_NONE,
+                'Disable write extension=XXX or zend_extension=XXX to ini file',
             );
 
         if (defined('PHP_WINDOWS_VERSION_MAJOR')) {
@@ -188,6 +199,43 @@ class InstallerCommand extends BuildCommand
         $build->cleanup();
     }
 
+    /**
+     * 检查扩展是否已经加载
+     */
+    protected function isLoaded(
+        InputInterface $input,
+        OutputInterface $output,
+        $path,
+        $php
+    ){
+        if($input->getOption('force')){
+            // 指定 --force, 不检查扩展是否加载，强制安装
+            return false;
+        }
+
+        if($path === 'opcache'){
+            $path = 'Zend OPcache';
+        }
+
+        if($input->getOption('php')){
+            // 指定了 PHP, 检查该 PHP
+            $command = $php->getPath() . ' -r ' . '"echo extension_loaded(\''.$path.'\');"'; 
+            if(exec($command)){
+                $output->writeln("<fg=red>[ $path ] is loaded, skip</>");
+
+                return true;
+            }
+        }
+
+        if(extension_loaded($path)){
+            $output->writeln("<fg=red>[ $path ] is loaded, skip</>");
+
+            return true;
+        }
+
+        return false;
+    }
+
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         $path = rtrim($input->getArgument('path'), '/\\');
@@ -196,17 +244,51 @@ class InstallerCommand extends BuildCommand
         /* Respect the --php option. This will setup the engine instance. */
         $php = Engine::factory($input->getOption('php'));
 
+        if($this->isLoaded($input,$output,$path,$php)){
+            return 0;
+        }
+
+        // find ext from ext_dir
+        $extensionDir = $php->getExtensionDir().DIRECTORY_SEPARATOR;
+        $ini = Ini::factory($php);
+        $phpIniDir = $php->getIniDir();
+
+        if($php->isWindows && \file_exists($extensionDir.'php_'.$path.'.dll')){
+          $output->writeln('find ext file in '.$extensionDir);
+
+          $ini->updatePickleSection(['php_'.$path.'.dll']);
+
+          return 0;
+        }
+
+        if((!$php->isWindows) && \file_exists($extensionDir.$path.'.so')){
+          $output->writeln('find ext file in '.$extensionDir);
+
+          $ini->updatePickleSectionOnLinux(
+              [$path.'.so'],$phpIniDir,$input->getOption('no-write')
+          );
+
+          return 0;
+        }
+
         /* if windows, try bin install by default */
         if (defined('PHP_WINDOWS_VERSION_MAJOR')) {
             $sourceRequested = $input->getOption('source');
             if (!$sourceRequested) {
+                // 不包含 --source 直接下载二进制
                 $this->binaryInstallWindows($path, $input, $output);
 
                 return 0;
             }
         }
 
+        // 转换扩展
         $package = $this->getHelper('package')->convey($input, $output, $path);
+
+        $packageName=$package->getName();
+        if($this->isLoaded($input,$output,$packageName,$php)){
+            return 0;
+        };
 
         /* TODO Info package command should be used here. */
         $this->getHelper('package')->showInfo($output, $package);
@@ -218,6 +300,23 @@ class InstallerCommand extends BuildCommand
         }
 
         $this->sourceInstall($package, $input, $output, $optionsValue, $force_opts);
+
+        if($php->isWindows){
+            return 0;
+        }
+
+        if(!$phpIniDir){
+            // ini dir 不存在
+            $output->writeln('<info>php_ini_dir not found, skip write ini</info>');
+
+            return 0;
+        }
+
+        $output->writeln('<info>php_ini_dir [ '. $phpIniDir .' ] found, write ini</info>');
+
+        $ini->updatePickleSectionOnLinux(
+            [$packageName.'.so'],$phpIniDir,$input->getOption('no-write')
+        );
 
         return 0;
     }
