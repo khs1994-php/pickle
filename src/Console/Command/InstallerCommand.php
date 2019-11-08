@@ -106,7 +106,7 @@ class InstallerCommand extends BuildCommand
                 'no-write',
                 null,
                 InputOption::VALUE_NONE,
-                'Disable write extension=XXX or zend_extension=XXX to ini file',
+                'Disable write extension=XXX or zend_extension=XXX to ini file'
             );
 
         if (defined('PHP_WINDOWS_VERSION_MAJOR')) {
@@ -179,6 +179,8 @@ class InstallerCommand extends BuildCommand
 
         $build = \Pickle\Package\Command\Build::factory($package, $optionsValue);
 
+        $isSuccess = true;
+
         try {
             $build->prepare();
             $build->createTempDir($package->getUniqueNameForFs());
@@ -195,8 +197,12 @@ class InstallerCommand extends BuildCommand
             if ($helper->ask($input, $output, $prompt)) {
                 $output->write($build->getLog());
             }
+
+            $isSuccess = false;
         }
         $build->cleanup();
+
+        return $isSuccess;
     }
 
     /**
@@ -299,7 +305,11 @@ class InstallerCommand extends BuildCommand
             return 0;
         }
 
-        $this->sourceInstall($package, $input, $output, $optionsValue, $force_opts);
+        $result = $this->sourceInstall($package, $input, $output, $optionsValue, $force_opts);
+
+        if(!$result){
+            throw new \Exception('install error, please check build log');
+        }
 
         if($php->isWindows){
             return 0;

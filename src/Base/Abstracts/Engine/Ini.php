@@ -55,6 +55,10 @@ class Ini
         $this->engine = $php;
         $this->path = $php->getIniPath();
 
+        if(!$php->isWindows){
+            return;
+        }
+
         $this->raw = @file_get_contents($this->path);
         if (false === $this->raw) {
             throw new \Exception('Cannot read php.ini');
