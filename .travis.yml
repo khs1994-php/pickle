@@ -36,7 +36,7 @@ after_script:
   - ls -lah $(php-config --extension-dir)
   - php -m > 1
   - ./pickle.phar install mongodb --defaults -n -vvv
-  - ./pickle.phar install yaml --defaults -n -vvv
+  - ./pickle.phar install yaml --defaults -n -vvv --defaults --cleanup --strip
   - ls -lah $(php-config --extension-dir)
   - php -m > 2
   - diff 1 2

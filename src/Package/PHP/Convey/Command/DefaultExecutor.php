@@ -62,7 +62,11 @@ class DefaultExecutor implements Interfaces\Package\Convey\DefaultExecutor
         if(!file_exists($package_xml)){
             $files = (new Finder())->in($target)->files()->name('/^php_.*\.h$/');
             foreach($files as $file){
-                $name = trim(trim($file->getRelativePathname(),'php_'),'.h');
+                $name = $file->getRelativePathname();
+                $name = \substr($name,4);
+                $name = \substr($name,0,-2);
+
+                break;
             }
 
             $pickle_json_content = \json_encode([

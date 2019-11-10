@@ -136,8 +136,13 @@ class Ini extends Abstracts\Engine\Ini implements Interfaces\Engine\Ini
         }
     }
 
+    /**
+     * @param ext xdebug xdebug.so
+     */
     protected function isZendExtension($ext){
-        $ext = trim($ext,'.so');
+        if(false !== strpos($ext,'.so')){
+            $ext = substr($ext,0,-3);
+        }
 
         return \in_array($ext,['xdebug','opcache']);
     }
