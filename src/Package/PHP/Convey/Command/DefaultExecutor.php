@@ -65,8 +65,13 @@ class DefaultExecutor implements Interfaces\Package\Convey\DefaultExecutor
                 $name = $file->getRelativePathname();
                 $name = \substr($name,4);
                 $name = \substr($name,0,-2);
+                if(strpos($file->getContents(),'PHP_'.\strtoupper($name).'_VERSION')){
+                    break;
+                }
+            }
 
-                break;
+            if(!$name){
+                throw new \Exception('get package name error');
             }
 
             $pickle_json_content = \json_encode([

@@ -110,10 +110,10 @@ abstract class BuildCommand extends Command
 
         if ($force_opts) {
             if (!file_exists($force_opts) || !is_file($force_opts) || !is_readable($force_opts)) {
-                $output->info("Configure options file '$force_opts' is unusable");
+                $output->writeln("Configure options file '$force_opts' is unusable");
             }
 
-            $output->info("Configure options file '$force_opts' load success");
+            $output->writeln("Configure options file '$force_opts' load success");
 
             $force_opts = preg_replace(",\s+,", ' ', file_get_contents($force_opts));
 

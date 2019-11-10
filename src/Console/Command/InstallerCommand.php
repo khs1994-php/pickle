@@ -337,7 +337,7 @@ class InstallerCommand extends BuildCommand
         // 从 php-src 寻找扩展
         $php_src = $input->getOption('php-src');
         if(is_dir($php_src.'/ext/'.$path)){
-            $output->writeln('find ext src from php-src');
+            $output->writeln('find ext [ '.$path.' ] src from php-src');
             $path = $php_src.'/ext/'.$path;
         }
 
