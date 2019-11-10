@@ -13,9 +13,14 @@ Pickle installs PHP extensions easily on all platforms.
 
 * https://github.com/FriendsOfPHP/pickle/compare/master...khs1994-php:master
 
+* 不维护 HHVM 部分
+
+## TODO
+
 ## path arg
 
-* pecl name (yaml)
+* 支持传入多个 path  `$ pickle install xdebug yaml curl`
+* pecl name (yaml yaml-beta yaml-x.y.z)
 * git url (https://github.com/xdebug/xdebug)
 * local dir (/tmp/yaml)
 

@@ -129,7 +129,10 @@ class Version
                 return $version;
             }
         }
-        throw new \Exception("Couldn't parse the version defined in the {$this->macroName} macro");
+        
+        return '0.0.0';
+
+        // throw new \Exception("Couldn't parse the version defined in the {$this->macroName} macro");
     }
 
     public function updateJSON()

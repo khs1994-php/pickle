@@ -57,6 +57,7 @@ class PHP extends Abstracts\Engine implements Interfaces\Engine
     private $hasSdk;
     private $iniDir;
     public  $isWindows = false;
+    private $prefix = '';
 
     public function __construct($phpCli = PHP_BINARY)
     {
@@ -93,6 +94,10 @@ class PHP extends Abstracts\Engine implements Interfaces\Engine
             /* TODO till now we didn't need his on linux*/
             // var_dump($this->getFromPhpInfo());
         // }
+
+        if(is_dir($prefix = \realpath($this->extensionDir.'/../../../../'))){
+            $this->prefix = $prefix;
+        }
 
         if (defined('PHP_WINDOWS_VERSION_MAJOR')) {
             $this->isWindows = true;
@@ -175,7 +180,7 @@ class PHP extends Abstracts\Engine implements Interfaces\Engine
             }
         }
 
-        if (!defined('PHP_WINDOWS_VERSION_MAJOR')) {
+        if (!$this->isWindows) {
           return 'Linux';
         }
 
@@ -305,6 +310,10 @@ class PHP extends Abstracts\Engine implements Interfaces\Engine
 
     public function getIniDir(){
         return $this->iniDir;
+    }
+
+    public function getPrefix(){
+        return $this->prefix;
     }
 }
 

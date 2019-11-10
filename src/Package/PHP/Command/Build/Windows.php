@@ -154,7 +154,7 @@ class Windows extends Abstracts\Package\Build implements Interfaces\Package\Buil
         }
     }
 
-    public function install()
+    public function install($php,$strip= false,$cleanup=false)
     {
         $backCwd = getcwd();
         chdir($this->tempDir);

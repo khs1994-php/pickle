@@ -41,17 +41,17 @@ use Pickle\Base\Interfaces;
 
 class Unix extends Abstracts\Package\Build implements Interfaces\Package\Build
 {
-    public function prepare()
+    public function prepare($phpize="phpize")
     {
-        $this->phpize();
+        $this->phpize($phpize);
     }
 
-    public function phpize()
+    public function phpize($phpize="phpize")
     {
         $backCwd = getcwd();
         chdir($this->pkg->getSourceDir());
 
-        $res = $this->runCommand('phpize');
+        $res = $this->runCommand($phpize);
         chdir($backCwd);
         if (!$res) {
             throw new \Exception('phpize failed');
@@ -102,7 +102,7 @@ class Unix extends Abstracts\Package\Build implements Interfaces\Package\Build
         $backCwd = getcwd();
         chdir($this->tempDir);
         $nproc = exec('nproc');
-        $res = $this->runCommand('make -j '.$nproc);
+        $res = $this->runCommand('make -j'.$nproc);
         chdir($backCwd);
 
         if (!$res) {
@@ -110,15 +110,39 @@ class Unix extends Abstracts\Package\Build implements Interfaces\Package\Build
         }
     }
 
-    public function install()
+    public function install($php,$strip = false,$cleanup=false)
     {
         $backCwd = getcwd();
         chdir($this->tempDir);
+        $nproc = exec('nproc');
         $res = $this->runCommand('make install');
         chdir($backCwd);
         if (!$res) {
+            $res = $this->runCommand('make -j'.$nproc .' clean');
             throw new \Exception('make install failed');
         }
+        $res = $this->runCommand('make -j'.$nproc .' clean');
+
+        $strip && $this->strip($php);
+        $cleanup && $this->deleteUselessFile($php);
+    }
+
+    public function strip($php){
+        $res = $this->runCommand('strip --strip-all '.$php->getExtensionDir().DIRECTORY_SEPARATOR.$this->pkg->getName().'.so');
+        
+        if(!$res){
+            throw new \Exception('strip failed');
+        }
+    }
+
+    public function deleteUselessFile($php){
+        if(!$prefix = $php->getPrefix()){
+             return;
+        }
+
+        $this->runCommand('rm -rf '.$prefix.'/lib/php/test/'.$this->pkg);
+        $this->runCommand('rm -rf '.$prefix.'/lib/php/doc/'.$this->pkg);
+        $this->runCommand('rm -rf '.$prefix.'/include/php/ext/'.$this->pkg);
     }
 
     public function getInfo()

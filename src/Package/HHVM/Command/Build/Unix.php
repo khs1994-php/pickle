@@ -76,7 +76,7 @@ class Unix extends Abstracts\Package\Build implements Interfaces\Package\Build
         }
     }
 
-    public function install()
+    public function install($php,$strip,$cleanup)
     {
         $newcwd = $this->pkg->getSourceDir();
         $res = $this->runCommand("cd $newcwd && make install");

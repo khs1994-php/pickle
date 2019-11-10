@@ -107,6 +107,33 @@ class InstallerCommand extends BuildCommand
                 null,
                 InputOption::VALUE_NONE,
                 'Disable write extension=XXX or zend_extension=XXX to ini file'
+            )->addOption(
+                'strip',
+                null,
+                InputOption::VALUE_NONE,
+                'exec strip command, strip --strip-all'
+            )->addOption(
+                'cleanup',
+                null,
+                InputOption::VALUE_NONE,
+                'cleanup useless files lib/doc/ lib/test/ include/ext/'
+            )->addOption(
+                'php-src',
+                null,
+                InputOption::VALUE_REQUIRED,
+                'php src dir',
+                '/usr/src/php'
+            )->addOption(
+                'phpize',
+                null,
+                InputOption::VALUE_REQUIRED,
+                'path to an alternative phpize',
+                'phpize'
+            )->addOption(
+                'continue-on-error',
+                null,
+                InputOption::VALUE_NONE,
+                'Don\'t exit on fail'
             );
 
         if (defined('PHP_WINDOWS_VERSION_MAJOR')) {
@@ -182,11 +209,11 @@ class InstallerCommand extends BuildCommand
         $isSuccess = true;
 
         try {
-            $build->prepare();
+            $build->prepare($input->getOption('phpize'));
             $build->createTempDir($package->getUniqueNameForFs());
             $build->configure($force_opts);
             $build->make();
-            $build->install();
+            $build->install($php,$input->getOption('strip'),$input->getOption('cleanup'));
 
             $this->saveBuildLogs($input, $build);
         } catch (\Exception $e) {
@@ -244,7 +271,24 @@ class InstallerCommand extends BuildCommand
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $path = rtrim($input->getArgument('path'), '/\\');
+        $paths = $input->getArgument('path');
+        foreach($paths as $path){
+            try{
+                $this->handler($input,$output,$path);
+            }catch(\Exception $e){
+                $message = $e->getMessage();
+                if(!$input->getOption('continue-on-error')){
+                    throw new \Exception($message);
+                }
+                
+                $output->writeln($message);
+            }
+        }
+    }
+
+    protected function handler(InputInterface $input, OutputInterface $output,$path){
+        $path = rtrim($path, '/\\');
+
         Util\TmpDir::set($input->getOption('tmp-dir'));
 
         /* Respect the --php option. This will setup the engine instance. */
@@ -290,10 +334,18 @@ class InstallerCommand extends BuildCommand
             }
         }
 
+        // 从 php-src 寻找扩展
+        $php_src = $input->getOption('php-src');
+        if(is_dir($php_src.'/ext/'.$path)){
+            $output->writeln('find ext src from php-src');
+            $path = $php_src.'/ext/'.$path;
+        }
+
         // 转换扩展
         $package = $this->getHelper('package')->convey($input, $output, $path);
 
         $packageName=$package->getName();
+
         if($this->isLoaded($input,$output,$packageName,$php)){
             return 0;
         };

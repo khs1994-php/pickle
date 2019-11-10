@@ -52,9 +52,9 @@ abstract class BuildCommand extends Command
         $this
             ->addArgument(
                 'path',
-                InputArgument::OPTIONAL,
+                InputArgument::IS_ARRAY,
                 'Path to the PECL extension root directory (default pwd), archive or extension name',
-                getcwd()
+                [getcwd()]
             )
             ->addOption(
                 'no-convert',
@@ -76,7 +76,7 @@ abstract class BuildCommand extends Command
                 'with-configure-options',
                 null,
                 InputOption::VALUE_REQUIRED,
-                'path to the additional configure options'
+                'path to the additional configure options, try load /tmp/EXT.configure.options'
             )->addOption(
                 'save-logs',
                 null,
@@ -99,10 +99,21 @@ abstract class BuildCommand extends Command
 
         $force_opts = $input->getOption('with-configure-options');
 
+        // $force_opts 为空
+        if(!$force_opts){
+           // 尝试加载固定的文件 /tmp/EXT.configure.options
+           $force_opts ="/tmp/".$package->getName().".configure.options";
+           if (!file_exists($force_opts) || !is_file($force_opts) || !is_readable($force_opts)) {
+               $force_opts = null;
+           }
+        }
+
         if ($force_opts) {
             if (!file_exists($force_opts) || !is_file($force_opts) || !is_readable($force_opts)) {
-                throw new \Exception("File '$force_opts' is unusable");
+                $output->info("Configure options file '$force_opts' is unusable");
             }
+
+            $output->info("Configure options file '$force_opts' load success");
 
             $force_opts = preg_replace(",\s+,", ' ', file_get_contents($force_opts));
 
