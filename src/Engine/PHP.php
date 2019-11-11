@@ -65,6 +65,11 @@ class PHP extends Abstracts\Engine implements Interfaces\Engine
             throw new \Exception("Invalid php executable: $phpCli");
         }
         $this->phpCli = $phpCli;
+
+        if (defined('PHP_WINDOWS_VERSION_MAJOR')) {
+            $this->isWindows = true;
+        }
+
         $this->getFromConstants();
     }
 
@@ -97,10 +102,6 @@ class PHP extends Abstracts\Engine implements Interfaces\Engine
 
         if(is_dir($prefix = \realpath($this->extensionDir.'/../../../../'))){
             $this->prefix = $prefix;
-        }
-
-        if (defined('PHP_WINDOWS_VERSION_MAJOR')) {
-            $this->isWindows = true;
         }
     }
 
@@ -172,7 +173,8 @@ class PHP extends Abstracts\Engine implements Interfaces\Engine
     protected function getCompilerFromPhpInfo($info)
     {
         $compiler = '';
-
+        // Compiler => MSVC15 (Visual C++ 2017)
+        // 7.4 Compiler => Visual C++ 2017
         foreach ($info as $s) {
             if (false !== strpos($s, 'Compiler')) {
                 list(, $compiler) = explode('=>', $s);
@@ -222,6 +224,13 @@ class PHP extends Abstracts\Engine implements Interfaces\Engine
         $arch = $this->getArchFromPhpInfo($info);
         $iniPath = $this->getIniPathFromPhpInfo($info);
         $extensionDir = $this->getExtensionDirFromPhpInfo($info);
+        // extension_dir => C:\php\ext
+        // 7.4 extension_dir => ext
+
+        if(!is_dir($extensionDir)){
+            $extensionDir = dirname($this->getPath()) . DIRECTORY_SEPARATOR . $this->extensionDir;
+        }
+
         $iniDir = $this->getIniDirFromPhpInfo($info);
         $compiler = trim(
         strtolower(
@@ -296,11 +305,7 @@ class PHP extends Abstracts\Engine implements Interfaces\Engine
 
     public function getExtensionDir()
     {
-        if(is_dir($this->extensionDir)){
-            return $this->extensionDir;
-        }
-
-        return dirname($this->getPath()) . DIRECTORY_SEPARATOR . $this->extensionDir;
+        return $this->extensionDir;
     }
 
     public function getIniPath()

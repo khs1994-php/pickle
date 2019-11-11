@@ -167,7 +167,12 @@ class Ini extends Abstracts\Engine\Ini implements Interfaces\Engine\Ini
         $phpIniDirContent = ($this->isZendExtension($packageName) ? "zend_" : "")
             .'extension='.$packageName;
 
-        $phpIniDirFile = $phpIniDir.DIRECTORY_SEPARATOR.'php-ext-'.$packageName.'.ini';
+        $packageRealName = $packageName;
+        if($pos = \strpos($packageName,'.so')){
+            $pos !== false && $packageRealName = \substr($packageName,0,$pos);
+        };
+
+        $phpIniDirFile = $phpIniDir.DIRECTORY_SEPARATOR.'php-ext-'.$packageRealName.'.ini';
 
         if($no_write){
            $phpIniDirFile .= '.default';
