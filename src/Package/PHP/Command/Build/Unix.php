@@ -85,7 +85,8 @@ class Unix extends Abstracts\Package\Build implements Interfaces\Package\Build
     public function configure($opts = null)
     {
         $backCwd = getcwd();
-        chdir($this->tempDir);
+        // chdir($this->tempDir);
+        chdir($this->pkg->getSourceDir());
 
         /* XXX check sanity */
         $configureOptions = $opts ? $opts : $this->prepareConfigOpts();
@@ -100,7 +101,8 @@ class Unix extends Abstracts\Package\Build implements Interfaces\Package\Build
     public function make()
     {
         $backCwd = getcwd();
-        chdir($this->tempDir);
+        // chdir($this->tempDir);
+        chdir($this->pkg->getSourceDir());
         $nproc = exec('nproc');
         $res = $this->runCommand('make -j'.$nproc);
         chdir($backCwd);
@@ -113,7 +115,8 @@ class Unix extends Abstracts\Package\Build implements Interfaces\Package\Build
     public function install($php,$strip = false,$cleanup=false)
     {
         $backCwd = getcwd();
-        chdir($this->tempDir);
+        // chdir($this->tempDir);
+        chdir($this->pkg->getSourceDir());
         $nproc = exec('nproc');
         $res = $this->runCommand('make install');
         chdir($backCwd);

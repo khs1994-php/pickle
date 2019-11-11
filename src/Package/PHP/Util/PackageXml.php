@@ -62,11 +62,7 @@ class PackageXml
         }
 
         if (!$this->xmlPath) {
-            $exception = "The path '$path' doesn't contain package.xml";
-            echo $exception;
-
-            return;
-            // throw new \InvalidArgumentException($exception);
+            throw new \InvalidArgumentException("The path '$path' doesn't contain package.xml");
         }
 
         $this->jsonPath = $path.DIRECTORY_SEPARATOR.'composer.json';
@@ -75,14 +71,7 @@ class PackageXml
     public function load()
     {
         $loader = new Package\PHP\Util\XML\Loader(new Package\Util\Loader());
-
-        try{
-            $this->package = $loader->load($this->xmlPath);
-        }catch(\Exception $e){
-            echo $e->getMessage();
-
-            return;
-        }
+        $this->package = $loader->load($this->xmlPath);
 
         if (!$this->package) {
             throw new \Exception("Failed to load '{$this->xmlPath}'");
@@ -113,13 +102,11 @@ class PackageXml
             $this->jsonPath = $fname;
         }
 
+        // 从 .h 获取 version
         $version = new Header\Version($this->package);
         if ($version != $this->package->getPrettyVersion()) {
-            $exception = "Version mismatch - '".$version."' != '".$this->package->getVersion().'. in source vs JSON';
-
-            echo $exception;
-
-            // throw new \Exception($exception);
+            // throw new \Exception("Version mismatch - '".$version."' != '".$this->package->getVersion().'. in source vs JSON');
+            echo "Version mismatch - '".$version."' != '".$this->package->getVersion().'. in source vs JSON';
         }
 
         $dumper = new Dumper();

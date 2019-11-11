@@ -48,16 +48,16 @@ class Version
     protected $version;
     protected $macroName;
 
-    public function getMacroName($prefix = "PHP_"){
-        return $prefix.strtoupper($this->package->getSimpleName()).'_VERSION';
-    }
-
-    public function __construct(?Interfaces\Package $package)
+    public function __construct(Interfaces\Package $package)
     {
         $this->package = $package;
         $this->macroName = $this->getMacroName();
 
         $this->version = $this->getVersionFromHeader();
+    }
+
+    public function getMacroName($prefix = "PHP_"){
+        return $prefix.strtoupper($this->package->getSimpleName()).'_VERSION';
     }
 
     protected function findHeaders()
@@ -101,6 +101,7 @@ class Version
         ->name('*.h');
 
         // Match versions surrounded by quotes and versions without quotes
+        // #define PHP_YAML_VERSION "2.0.5-dev"
         $versionMatcher = '(".*"|.*\b)';
         $pat = ',define\s+'.preg_quote($this->macroName, ',').'\s+'.$versionMatcher.',i';
 
@@ -113,6 +114,7 @@ class Version
             $headerContent = file_get_contents($header);
             if (!$headerContent) {
                 throw new \Exception("Could not read $header");
+                // continue;
             }
             if (preg_match($pat, $headerContent, $result) or preg_match($pat2, $headerContent, $result)) {
                 // Remove any quote characters we may have matched on
@@ -129,7 +131,7 @@ class Version
                 return $version;
             }
         }
-        
+        // 版本号解析错误，返回 0.0.0
         return '0.0.0';
 
         // throw new \Exception("Couldn't parse the version defined in the {$this->macroName} macro");
@@ -150,7 +152,7 @@ class Version
         $len = file_put_contents($composer_json, json_encode($dumper->dump($this->package), JSON_PRETTY_PRINT));
 
         if (!$len) {
-            throw new \Exception("Failed to update '$package_json'");
+            throw new \Exception("Failed to update '$composer_json'");
         }
     }
 
