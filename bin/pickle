@@ -38,8 +38,10 @@ if (defined('PHP_WINDOWS_VERSION_MAJOR')) {
 $application = new Pickle\Console\Application($name);
 
 if(class_exists(\NunoMaduro\Collision\Provider::class)){
-    $application->setCatchExceptions(false);
-    (new \NunoMaduro\Collision\Provider)->register();
+    if(PHP_VERSION_ID >= 70100){
+        $application->setCatchExceptions(false);
+        (new \NunoMaduro\Collision\Provider)->register();
+    }
 }
 
 $application->run();
