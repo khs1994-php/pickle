@@ -33,6 +33,7 @@ script:
   - composer build || true
   - cp -a pickle.phar pickle-debug.phar || true
   - cp -a pickle.phar.back pickle.phar || true
+  - git tag nightly -f
 
 after_script:
   # - php ocular.phar code-coverage:upload --format=php-clover clover.xml
@@ -64,7 +65,6 @@ deploy:
     - pickle-debug.phar
     skip_cleanup: true
     on:
+      tags: false
       php: 7.3
       repo: khs1994-php/pickle
-      tag_name: nightly
-      prerelease: true
