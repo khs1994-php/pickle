@@ -113,8 +113,8 @@ class Version
             // $header->getRealPath()
             $headerContent = file_get_contents($header);
             if (!$headerContent) {
-                throw new \Exception("Could not read $header");
-                // continue;
+                // throw new \Exception("Could not read $header");
+                continue;
             }
             if (preg_match($pat, $headerContent, $result) or preg_match($pat2, $headerContent, $result)) {
                 // Remove any quote characters we may have matched on

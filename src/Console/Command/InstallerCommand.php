@@ -278,9 +278,9 @@ class InstallerCommand extends BuildCommand
             }catch(\Exception $e){
                 $message = $e->getMessage();
                 if(!$input->getOption('continue-on-error')){
-                    throw new \Exception($message);
+                    throw new \Exception($message,$e->getCode(),$e);
                 }
-                
+
                 $output->writeln($message);
             }
         }

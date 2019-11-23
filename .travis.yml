@@ -26,8 +26,13 @@ script:
   # - php vendor/atoum/atoum/scripts/coverage.php --format xml --output clover.xml
   - composer install --no-dev --optimize-autoloader || composer install --no-dev --optimize-autoloader --ignore-platform-reqs
   - composer build
+  - cp -a pickle.phar pickle.phar.back
   # - composer install
   # - PICKLE_BEHAT_PROCESS_TIMEOUT=0 vendor/bin/behat --format=progress
+  - composer require nunomaduro/collision || true
+  - composer build || true
+  - cp -a pickle.phar pickle-debug.phar || true
+  - cp -a pickle.phar.back pickle.phar || true
 
 after_script:
   # - php ocular.phar code-coverage:upload --format=php-clover clover.xml
@@ -42,11 +47,24 @@ after_script:
   - diff 1 2
 
 deploy:
-  provider: releases
-  api_key: ${GITHUB_TOKEN}
-  file: pickle.phar
-  skip_cleanup: true
-  on:
-    tags: true
-    php: 7.3
-    repo: khs1994-php/pickle
+  - provider: releases
+    api_key: ${GITHUB_TOKEN}
+    file: 
+    - pickle.phar
+    - pickle-debug.phar
+    skip_cleanup: true
+    on:
+      tags: true
+      php: 7.3
+      repo: khs1994-php/pickle
+  - provider: releases
+    api_key: ${GITHUB_TOKEN}
+    file: 
+    - pickle.phar
+    - pickle-debug.phar
+    skip_cleanup: true
+    on:
+      php: 7.3
+      repo: khs1994-php/pickle
+      tag_name: nightly
+      prerelease: true
