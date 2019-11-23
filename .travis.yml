@@ -23,22 +23,22 @@ before_script:
   # - wget https://scrutinizer-ci.com/ocular.phar
 
 script:
+  - git tag nightly -f
   # - php vendor/atoum/atoum/scripts/coverage.php --format xml --output clover.xml
   - composer install --no-dev --optimize-autoloader || composer install --no-dev --optimize-autoloader --ignore-platform-reqs
   - composer build
-  - cp -a pickle.phar pickle.phar.back
+  - mv pickle.phar pickle.phar.back
   # - composer install
   # - PICKLE_BEHAT_PROCESS_TIMEOUT=0 vendor/bin/behat --format=progress
-  - composer require nunomaduro/collision || true
+  - composer require nunomaduro/collision --update-no-dev || true
   - composer build || true
   - cp -a pickle.phar pickle-debug.phar || true
   - cp -a pickle.phar.back pickle.phar || true
-  - git tag nightly -f
+  - ls -lah
 
 after_script:
   # - php ocular.phar code-coverage:upload --format=php-clover clover.xml
   - chmod +x ./pickle.phar
-  - ls -lah pickle.phar
   - ls -lah $(php-config --extension-dir)
   - php -m > 1
   - ./pickle.phar install mongodb --defaults -n -vvv
@@ -68,3 +68,4 @@ deploy:
       tags: false
       php: 7.3
       repo: khs1994-php/pickle
+    overwrite: true
