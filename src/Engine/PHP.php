@@ -186,6 +186,14 @@ class PHP extends Abstracts\Engine implements Interfaces\Engine
           return 'Linux';
         }
 
+        if($this->major >= 7 and $this->minor >= 4 ){
+            $compiler="MSVC15 (Visual C++ 2017)";
+        }
+
+        if($this->major >= 8 and $this->minor >= 0 ){
+            // $compiler="MSVC15 (Visual C++ 2017)";
+        }
+
         $compiler = trim($compiler);
         if ('' == $compiler) {
             throw new \Exception('Cannot detect PHP build compiler version');

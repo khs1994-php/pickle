@@ -133,7 +133,7 @@ class Binary
      *
      * @throws \Exception
      */
-    private function fetchZipName()
+    private function fetchZipName($snap=false)
     {
         $phpVc = $this->php->getCompiler();
         $phpArch = $this->php->getArchitecture();
@@ -142,17 +142,31 @@ class Binary
         $pkgVersion = $this->extVersion;
         $extName = strtolower($this->extName);
         $baseUrl = 'https://windows.php.net/downloads/pecl/releases/';
+        $baseSnapUrl = 'https://windows.php.net/downloads/pecl/snaps/';
+
+        if($snap){
+            $baseUrl = $baseSnapUrl;
+        }
 
         if (false === $this->findInLinks($baseUrl.$extName, $pkgVersion)) {
-            throw new \Exception('Binary for <'.$extName.'-'.$pkgVersion.'> cannot be found');
+            if($snap){
+                throw new \Exception('Binary for <'.$extName.'-'.$pkgVersion.'> cannot be found');
+            }else{
+                return $this->fetchZipName(true);
+            }
         }
 
         $fileToFind = 'php_'.$extName.'-'.$pkgVersion.'-'.$phpVersion.$phpZts.'-'.$phpVc.'-'.$phpArch.'.zip';
         $fileUrl = $this->findInLinks($baseUrl.$extName.'/'.$pkgVersion, $fileToFind);
 
         if (!$fileUrl) {
-            throw new \Exception('Binary for <'.$fileToFind.'> cannot be found');
+            if($snap){
+                throw new \Exception('Binary for <'.$fileToFind.'> cannot be found');
+            }else{
+                return $this->fetchZipName(true);
+            }
         }
+
         $url = $baseUrl.$extName.'/'.$pkgVersion.'/'.$fileToFind;
 
         return $url;
