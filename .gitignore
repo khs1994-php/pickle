@@ -1,4 +1,7 @@
 composer.lock
 composer.phar
-pickle*.phar
 vendor/
+
+pickle*.phar
+
+.php_cs.cache

@@ -1,8 +1,7 @@
 <?php
 
 /**
- * Pickle
- *
+ * Pickle.
  *
  * @license
  *
@@ -36,8 +35,8 @@
 
 namespace Pickle\Engine;
 
-use Pickle\Base\Interfaces;
 use Pickle\Base\Abstracts;
+use Pickle\Base\Interfaces;
 
 class PHP extends Abstracts\Engine implements Interfaces\Engine
 {
@@ -56,7 +55,7 @@ class PHP extends Abstracts\Engine implements Interfaces\Engine
     private $extensionDir;
     private $hasSdk;
     private $iniDir;
-    public  $isWindows = false;
+    public $isWindows = false;
     private $prefix = '';
 
     public function __construct($phpCli = PHP_BINARY)
@@ -66,7 +65,7 @@ class PHP extends Abstracts\Engine implements Interfaces\Engine
         }
         $this->phpCli = $phpCli;
 
-        if (defined('PHP_WINDOWS_VERSION_MAJOR')) {
+        if (\defined('PHP_WINDOWS_VERSION_MAJOR')) {
             $this->isWindows = true;
         }
 
@@ -86,7 +85,7 @@ class PHP extends Abstracts\Engine implements Interfaces\Engine
         $cmd = $this->phpCli.' -r '.'"'.str_replace("\n", '', $script).'"';
 
         exec($cmd, $info);
-        if (7 !== count($info)) {
+        if (7 !== \count($info)) {
             throw new \Exception('Could not determine info from the PHP binary');
         }
 
@@ -94,13 +93,13 @@ class PHP extends Abstracts\Engine implements Interfaces\Engine
         $this->zts = (bool) $this->zts;
 
         // if (defined('PHP_WINDOWS_VERSION_MAJOR')) {
-            list($this->compiler, $this->architecture, $this->iniPath, $this->extensionDir,$this->iniDir) = $this->getFromPhpInfo();
+        list($this->compiler, $this->architecture, $this->iniPath, $this->extensionDir, $this->iniDir) = $this->getFromPhpInfo();
         // } else {
-            /* TODO till now we didn't need his on linux*/
-            // var_dump($this->getFromPhpInfo());
+        /* TODO till now we didn't need his on linux*/
+        // var_dump($this->getFromPhpInfo());
         // }
 
-        if(is_dir($prefix = \realpath($this->extensionDir.'/../../../../'))){
+        if (is_dir($prefix = realpath($this->extensionDir.'/../../../../'))) {
             $this->prefix = $prefix;
         }
     }
@@ -111,7 +110,7 @@ class PHP extends Abstracts\Engine implements Interfaces\Engine
 
         foreach ($info as $s) {
             $pos_ext_dir = strpos($s, 'extension_dir');
-            if (false !== $pos_ext_dir && substr($s, $pos_ext_dir - 1, 1) != '.') {
+            if (false !== $pos_ext_dir && '.' != substr($s, $pos_ext_dir - 1, 1)) {
                 list(, $extensionDir) = explode('=>', $s);
                 break;
             }
@@ -135,9 +134,9 @@ class PHP extends Abstracts\Engine implements Interfaces\Engine
                 break;
             }
 
-            if (0 === strpos($s,'System')){
+            if (0 === strpos($s, 'System')) {
                 list(, $archInfo) = explode('=>', $s);
-                $archInfoArray = \explode(' ',$archInfo);
+                $archInfoArray = explode(' ', $archInfo);
                 $arch = array_pop($archInfoArray);
             }
         }
@@ -183,14 +182,14 @@ class PHP extends Abstracts\Engine implements Interfaces\Engine
         }
 
         if (!$this->isWindows) {
-          return 'Linux';
+            return 'Linux';
         }
 
-        if($this->major >= 7 and $this->minor >= 4 ){
-            $compiler="MSVC15 (Visual C++ 2017)";
+        if ($this->major >= 7 and $this->minor >= 4) {
+            $compiler = 'MSVC15 (Visual C++ 2017)';
         }
 
-        if($this->major >= 8 and $this->minor >= 0 ){
+        if ($this->major >= 8 and $this->minor >= 0) {
             // $compiler="MSVC15 (Visual C++ 2017)";
         }
 
@@ -202,7 +201,8 @@ class PHP extends Abstracts\Engine implements Interfaces\Engine
         return $compiler;
     }
 
-    private function getIniDirFromPhpInfo($info){
+    private function getIniDirFromPhpInfo($info)
+    {
         $iniDir = '';
 
         foreach ($info as $s) {
@@ -225,7 +225,7 @@ class PHP extends Abstracts\Engine implements Interfaces\Engine
         $cmd = $this->phpCli.' -i';
         exec($cmd, $info);
 
-        if (!is_array($info)) {
+        if (!\is_array($info)) {
             throw new \Exception('Cannot parse phpinfo output');
         }
 
@@ -235,8 +235,8 @@ class PHP extends Abstracts\Engine implements Interfaces\Engine
         // extension_dir => C:\php\ext
         // 7.4 extension_dir => ext
 
-        if(!is_dir($extensionDir)){
-            $extensionDir = dirname($this->getPath()) . DIRECTORY_SEPARATOR . $this->extensionDir;
+        if (!is_dir($extensionDir)) {
+            $extensionDir = \dirname($this->getPath()).\DIRECTORY_SEPARATOR.$this->extensionDir;
         }
 
         $iniDir = $this->getIniDirFromPhpInfo($info);
@@ -248,7 +248,7 @@ class PHP extends Abstracts\Engine implements Interfaces\Engine
             )
         );
 
-        return [$compiler, $arch, $iniPath, $extensionDir,$iniDir];
+        return [$compiler, $arch, $iniPath, $extensionDir, $iniDir];
     }
 
     public function getName()
@@ -261,8 +261,8 @@ class PHP extends Abstracts\Engine implements Interfaces\Engine
         if (isset($this->hasSdk)) {
             return $this->hasSdk;
         }
-        $cliDir = dirname($this->phpCli);
-        $res = glob($cliDir.DIRECTORY_SEPARATOR.'phpize*');
+        $cliDir = \dirname($this->phpCli);
+        $res = glob($cliDir.\DIRECTORY_SEPARATOR.'phpize*');
         if (!$res) {
             $this->hasSdk = false;
         }
@@ -321,11 +321,13 @@ class PHP extends Abstracts\Engine implements Interfaces\Engine
         return $this->iniPath;
     }
 
-    public function getIniDir(){
+    public function getIniDir()
+    {
         return $this->iniDir;
     }
 
-    public function getPrefix(){
+    public function getPrefix()
+    {
         return $this->prefix;
     }
 }

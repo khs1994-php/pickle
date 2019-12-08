@@ -1,8 +1,7 @@
 <?php
 
 /**
- * Pickle
- *
+ * Pickle.
  *
  * @license
  *
@@ -36,8 +35,8 @@
 
 namespace Pickle\Engine\HHVM;
 
-use Pickle\Base\Interfaces;
 use Pickle\Base\Abstracts;
+use Pickle\Base\Interfaces;
 
 class Ini extends Abstracts\Engine\Ini implements Interfaces\Engine\Ini
 {
@@ -54,12 +53,12 @@ class Ini extends Abstracts\Engine\Ini implements Interfaces\Engine\Ini
      *
      * @return string
      */
-    protected function rebuildPickleParts($pickleSection, array $dsos_add, array $dsos_del = array())
+    protected function rebuildPickleParts($pickleSection, array $dsos_add, array $dsos_del = [])
     {
         $lines = explode("\n", $pickleSection);
         $new = [];
 
-        $names = array();
+        $names = [];
         foreach ($dsos_add as $dso) {
             $new[] = $this->buildDsoIniLine($dso);
         }
@@ -71,11 +70,11 @@ class Ini extends Abstracts\Engine\Ini implements Interfaces\Engine\Ini
             }
             list(, $dllname) = explode('=', $l);
 
-            if (in_array(trim($dllname), $dsos_add)) {
+            if (\in_array(trim($dllname), $dsos_add)) {
                 /* don't create a duplicated item */
                 continue;
             }
-            if (in_array(trim($dllname), $dsos_del)) {
+            if (\in_array(trim($dllname), $dsos_del)) {
                 /* don't restore as it should be deleted */
                 continue;
             }
@@ -90,13 +89,13 @@ class Ini extends Abstracts\Engine\Ini implements Interfaces\Engine\Ini
         $posHeader = strpos($this->raw, self::PICKLE_HEADER);
         if (false === $posHeader) {
             /* no pickle section here yet */
-            $this->pickleHeaderStartPos = strlen($this->raw);
+            $this->pickleHeaderStartPos = \strlen($this->raw);
 
             return;
         }
 
         $this->pickleHeaderStartPos = $posHeader;
-        $this->pickleHeaderEndPos = $this->pickleHeaderStartPos + strlen(self::PICKLE_HEADER);
+        $this->pickleHeaderEndPos = $this->pickleHeaderStartPos + \strlen(self::PICKLE_HEADER);
 
         $posFooter = strpos($this->raw, self::PICKLE_FOOTER);
         if (false === $posFooter) {
@@ -118,11 +117,11 @@ class Ini extends Abstracts\Engine\Ini implements Interfaces\Engine\Ini
             $this->pickleFooterStartPos = strpos($this->raw, "\n", $this->pickleFooterStartPos);
         } else {
             $this->pickleFooterStartPos = $posFooter;
-            $this->pickleFooterEndPos = $this->pickleFooterStartPos + strlen(self::PICKLE_FOOTER);
+            $this->pickleFooterEndPos = $this->pickleFooterStartPos + \strlen(self::PICKLE_FOOTER);
         }
     }
 
-    public function updatePickleSection(array $dsos_add, array $dsos_del = array())
+    public function updatePickleSection(array $dsos_add, array $dsos_del = [])
     {
         $before = '';
         $after = '';
@@ -151,8 +150,8 @@ class Ini extends Abstracts\Engine\Ini implements Interfaces\Engine\Ini
     protected function buildDsoName($dso)
     {
         /* HHVM currently doesn't support Windows, so just a guess here. */
-        $pre = defined('PHP_WINDOWS_VERSION_MAJOR') ? 'php_' : '';
-        $suf = defined('PHP_WINDOWS_VERSION_MAJOR') ? '.dll' : '.so';
+        $pre = \defined('PHP_WINDOWS_VERSION_MAJOR') ? 'php_' : '';
+        $suf = \defined('PHP_WINDOWS_VERSION_MAJOR') ? '.dll' : '.so';
 
         return "$pre$dso$suf";
     }

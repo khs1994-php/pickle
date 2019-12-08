@@ -1,8 +1,7 @@
 <?php
 
 /**
- * Pickle
- *
+ * Pickle.
  *
  * @license
  *
@@ -37,8 +36,8 @@
 namespace Pickle\Package\PHP\Util;
 
 use Pickle\Package;
-use Pickle\Package\Util\JSON\Dumper;
 use Pickle\Package\Util\Header;
+use Pickle\Package\Util\JSON\Dumper;
 
 class PackageXml
 {
@@ -48,13 +47,13 @@ class PackageXml
 
     public function __construct($path)
     {
-        $names = array(
+        $names = [
                         'package2.xml',
                         'package.xml',
-                );
+                ];
 
         foreach ($names as $fl) {
-            $xml = $path.DIRECTORY_SEPARATOR.$fl;
+            $xml = $path.\DIRECTORY_SEPARATOR.$fl;
             if (true === is_file($xml)) {
                 $this->xmlPath = $xml;
                 break;
@@ -65,7 +64,7 @@ class PackageXml
             throw new \InvalidArgumentException("The path '$path' doesn't contain package.xml");
         }
 
-        $this->jsonPath = $path.DIRECTORY_SEPARATOR.'composer.json';
+        $this->jsonPath = $path.\DIRECTORY_SEPARATOR.'composer.json';
     }
 
     public function load()

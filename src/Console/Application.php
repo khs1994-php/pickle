@@ -13,7 +13,7 @@ class Application extends BaseApplication
     {
         self::checkExtensions();
 
-        parent::__construct($name ?: static::NAME, $version ?: (static::VERSION === '@' . 'pickle-version@' ? 'source' : static::VERSION));
+        parent::__construct($name ?: static::NAME, $version ?: (static::VERSION === '@'.'pickle-version@' ? 'source' : static::VERSION));
     }
 
     protected function getDefaultHelperSet()
@@ -35,7 +35,7 @@ class Application extends BaseApplication
         $commands[] = new Command\InstallerCommand();
         $commands[] = new Command\InfoCommand();
 
-        if (\Phar::running() !== '') {
+        if ('' !== \Phar::running()) {
             $commands[] = new Command\SelfUpdateCommand();
         }
 
@@ -44,20 +44,20 @@ class Application extends BaseApplication
 
     private static function checkExtensions()
     {
-        $required_exts = array(
-            "zlib",
-            "mbstring",
-            "simplexml",
-            "json",
-            "dom",
-            "openssl",
-            "phar",
-            "zip",
-        );
+        $required_exts = [
+            'zlib',
+            'mbstring',
+            'simplexml',
+            'json',
+            'dom',
+            'openssl',
+            'phar',
+            'zip',
+        ];
 
         foreach ($required_exts as $ext) {
-            if (!extension_loaded($ext)) {
-                die("Extension '$ext' required but not loaded, full required list: " . implode(", ", $required_exts));
+            if (!\extension_loaded($ext)) {
+                die("Extension '$ext' required but not loaded, full required list: ".implode(', ', $required_exts));
             }
         }
     }

@@ -1,8 +1,7 @@
 <?php
 
 /**
- * Pickle
- *
+ * Pickle.
  *
  * @license
  *
@@ -36,11 +35,11 @@
 
 namespace Pickle\Package\Convey\Command;
 
-use Pickle\Config;
+use Composer\Downloader\GitDownloader;
 use Pickle\Base\Abstracts;
 use Pickle\Base\Interfaces;
+use Pickle\Config;
 use Pickle\Package;
-use Composer\Downloader\GitDownloader;
 
 class Git extends Abstracts\Package\Convey\Command implements Interfaces\Package\Convey\Command
 {

@@ -1,8 +1,7 @@
 <?php
 
 /**
- * Pickle
- *
+ * Pickle.
  *
  * @license
  *
@@ -36,8 +35,8 @@
 
 namespace Pickle\Engine;
 
-use Pickle\Base\Interfaces;
 use Pickle\Base\Abstracts;
+use Pickle\Base\Interfaces;
 
 class HHVM extends Abstracts\Engine implements Interfaces\Engine
 {

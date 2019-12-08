@@ -1,8 +1,7 @@
 <?php
 
 /**
- * Pickle
- *
+ * Pickle.
  *
  * @license
  *
@@ -84,19 +83,19 @@ class Binary implements Interfaces\Package\Release
 
     protected function composerJsonBak(\Pickle\Base\Interfaces\Package $pkg, $restore = false)
     {
-        $composer_json_orig = $pkg->getRootDir().DIRECTORY_SEPARATOR.'composer.json';
-        $composer_json_bak = $pkg->getRootDir().DIRECTORY_SEPARATOR.'.composer.json.orig';
+        $composer_json_orig = $pkg->getRootDir().\DIRECTORY_SEPARATOR.'composer.json';
+        $composer_json_bak = $pkg->getRootDir().\DIRECTORY_SEPARATOR.'.composer.json.orig';
 
         if ($restore) {
             if (file_exists($composer_json_bak)) {
                 if (!copy($composer_json_bak, $composer_json_orig)) {
-                    throw new \Exception("Failed to restore composer.json");
+                    throw new \Exception('Failed to restore composer.json');
                 }
             }
         } else {
             if (file_exists($composer_json_orig)) {
                 if (!copy($composer_json_orig, $composer_json_bak)) {
-                    throw new \Exception("Failed to backup composer.json");
+                    throw new \Exception('Failed to backup composer.json');
                 }
             }
         }
@@ -107,8 +106,8 @@ class Binary implements Interfaces\Package\Release
         $jsonLoader = new Package\Util\JSON\Loader(new Package\Util\Loader());
         $package = null;
 
-        if (file_exists($path.DIRECTORY_SEPARATOR.'composer.json')) {
-            $package = $jsonLoader->load($path.DIRECTORY_SEPARATOR.'composer.json');
+        if (file_exists($path.\DIRECTORY_SEPARATOR.'composer.json')) {
+            $package = $jsonLoader->load($path.\DIRECTORY_SEPARATOR.'composer.json');
         }
 
         if (null === $package && $this->noConvert) {
@@ -163,7 +162,7 @@ class Binary implements Interfaces\Package\Release
     /**
      * Create package.
      */
-    public function create(array $args = array())
+    public function create(array $args = [])
     {
         if (!isset($args['build']) || !($args['build'] instanceof Interfaces\Package\Build)) {
             throw new \Exception("Invalid or NULL object passed as Interfaces\Package\Build");
@@ -181,34 +180,34 @@ class Binary implements Interfaces\Package\Release
                 $build_dir = $m[1];
             } else {
                 /* otherwise construct */
-                $build_dir = $tmp_dir.DIRECTORY_SEPARATOR.$m[1];
+                $build_dir = $tmp_dir.\DIRECTORY_SEPARATOR.$m[1];
             }
         } else {
-            $build_dir = 'x86' == $info['arch'] ? $tmp_dir : $tmp_dir.DIRECTORY_SEPARATOR.'x64';
-            $build_dir .= DIRECTORY_SEPARATOR.($is_release ? 'Release' : 'Debug');
+            $build_dir = 'x86' == $info['arch'] ? $tmp_dir : $tmp_dir.\DIRECTORY_SEPARATOR.'x64';
+            $build_dir .= \DIRECTORY_SEPARATOR.($is_release ? 'Release' : 'Debug');
             $build_dir .= ($info['thread_safe'] ? '_TS' : '');
         }
 
         /* Various file paths to pack. */
-        $composer_json = $this->pkg->getRootDir().DIRECTORY_SEPARATOR.'composer.json';
+        $composer_json = $this->pkg->getRootDir().\DIRECTORY_SEPARATOR.'composer.json';
 
-        if (file_exists($tmp_dir.DIRECTORY_SEPARATOR.'LICENSE')) {
-            $license = $tmp_dir.DIRECTORY_SEPARATOR.'LICENSE';
-        } elseif (file_exists($tmp_dir.DIRECTORY_SEPARATOR.'COPYING')) {
-            $license = $tmp_dir.DIRECTORY_SEPARATOR.'COPYING';
-        } elseif (file_exists($tmp_dir.DIRECTORY_SEPARATOR.'LICENSE.md')) {
-            $license = $tmp_dir.DIRECTORY_SEPARATOR.'LICENSE.md';
-        } elseif (file_exists($tmp_dir.DIRECTORY_SEPARATOR.'COPYING.md')) {
-            $license = $tmp_dir.DIRECTORY_SEPARATOR.'COPYING.md';
+        if (file_exists($tmp_dir.\DIRECTORY_SEPARATOR.'LICENSE')) {
+            $license = $tmp_dir.\DIRECTORY_SEPARATOR.'LICENSE';
+        } elseif (file_exists($tmp_dir.\DIRECTORY_SEPARATOR.'COPYING')) {
+            $license = $tmp_dir.\DIRECTORY_SEPARATOR.'COPYING';
+        } elseif (file_exists($tmp_dir.\DIRECTORY_SEPARATOR.'LICENSE.md')) {
+            $license = $tmp_dir.\DIRECTORY_SEPARATOR.'LICENSE.md';
+        } elseif (file_exists($tmp_dir.\DIRECTORY_SEPARATOR.'COPYING.md')) {
+            $license = $tmp_dir.\DIRECTORY_SEPARATOR.'COPYING.md';
         } else {
             throw new \Exception("Couldn't find LICENSE");
         }
 
         $readme = null;
-        if (file_exists($tmp_dir.DIRECTORY_SEPARATOR.'README')) {
-            $readme = $tmp_dir.DIRECTORY_SEPARATOR.'README';
-        } elseif (file_exists($tmp_dir.DIRECTORY_SEPARATOR.'README.md')) {
-            $readme = $tmp_dir.DIRECTORY_SEPARATOR.'README.md';
+        if (file_exists($tmp_dir.\DIRECTORY_SEPARATOR.'README')) {
+            $readme = $tmp_dir.\DIRECTORY_SEPARATOR.'README';
+        } elseif (file_exists($tmp_dir.\DIRECTORY_SEPARATOR.'README.md')) {
+            $readme = $tmp_dir.\DIRECTORY_SEPARATOR.'README.md';
         }
 
         /* pack the outcome */
@@ -223,7 +222,7 @@ class Binary implements Interfaces\Package\Release
         $ext_names = $this->getMultiExtensionNames();
         foreach ($ext_names as $ext_name) {
             $dll_name = 'php_'.$ext_name.'.dll';
-            $dll_file = $build_dir.DIRECTORY_SEPARATOR.$dll_name;
+            $dll_file = $build_dir.\DIRECTORY_SEPARATOR.$dll_name;
 
             if (!file_exists($dll_file)) {
                 continue;
@@ -232,7 +231,7 @@ class Binary implements Interfaces\Package\Release
             $zip->addFile($dll_file, $dll_name);
 
             $pdb_name = 'php_'.$ext_name.'.pdb';
-            $pdb_file = $build_dir.DIRECTORY_SEPARATOR.$pdb_name;
+            $pdb_file = $build_dir.\DIRECTORY_SEPARATOR.$pdb_name;
             if (file_exists($pdb_file)) {
                 $zip->addFile($pdb_file, $pdb_name);
             }
@@ -266,15 +265,15 @@ class Binary implements Interfaces\Package\Release
     public function getMultiExtensionNames()
     {
         $info = $this->build->getInfo();
-        $ext_names = array($info['name']);
+        $ext_names = [$info['name']];
 
         /* config.w32 can contain multiple EXTENTION definitions, which would lead to
          multiple DLLs be built. */
-        $config_w32_path = $this->build->getPackage()->getSourceDir().DIRECTORY_SEPARATOR.'config.w32';
+        $config_w32_path = $this->build->getPackage()->getSourceDir().\DIRECTORY_SEPARATOR.'config.w32';
         $config_w32 = file_get_contents($config_w32_path);
         if (preg_match_all("/EXTENSION\s*\(\s*('|\")([a-z0-9_]+)('|\")\s*,/Sm", $config_w32, $m, PREG_SET_ORDER)) {
             foreach ($m as $r) {
-                if (!in_array($r[2], $ext_names)) {
+                if (!\in_array($r[2], $ext_names)) {
                     $ext_names[] = $r[2];
                 }
             }

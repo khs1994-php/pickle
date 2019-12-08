@@ -1,8 +1,7 @@
 <?php
 
 /**
- * Pickle
- *
+ * Pickle.
  *
  * @license
  *
@@ -36,11 +35,11 @@
 
 namespace Pickle\Package\PHP\Command\Install\Windows;
 
-use Symfony\Component\Console\Input\InputInterface as InputInterface;
-use Symfony\Component\Console\Output\OutputInterface as OutputInterface;
+use Pickle\Base\Util;
 use Pickle\Base\Util\FileOps;
 use Pickle\Engine;
-use Pickle\Base\Util;
+use Symfony\Component\Console\Input\InputInterface as InputInterface;
+use Symfony\Component\Console\Output\OutputInterface as OutputInterface;
 
 class Binary
 {
@@ -60,7 +59,7 @@ class Binary
     public function __construct($ext)
     {
         // used only if only the extension name is given
-        if (strpos('//', $ext) !== false) {
+        if (false !== strpos('//', $ext)) {
             $this->extensionPeclExists();
         }
 
@@ -100,7 +99,7 @@ class Binary
     {
         $opts = [
             'http' => [
-                'header' => 'User-Agent: pickle'
+                'header' => 'User-Agent: pickle',
             ],
         ];
         $context = stream_context_create($opts);
@@ -116,7 +115,7 @@ class Binary
         }
 
         foreach ($links as $link) {
-            if ($link->nodeValue[0] == '[') {
+            if ('[' == $link->nodeValue[0]) {
                 continue;
             }
             $value = trim($link->nodeValue);
@@ -133,7 +132,7 @@ class Binary
      *
      * @throws \Exception
      */
-    private function fetchZipName($snap=false)
+    private function fetchZipName($snap = false)
     {
         $phpVc = $this->php->getCompiler();
         $phpArch = $this->php->getArchitecture();
@@ -144,14 +143,14 @@ class Binary
         $baseUrl = 'https://windows.php.net/downloads/pecl/releases/';
         $baseSnapUrl = 'https://windows.php.net/downloads/pecl/snaps/';
 
-        if($snap){
+        if ($snap) {
             $baseUrl = $baseSnapUrl;
         }
 
         if (false === $this->findInLinks($baseUrl.$extName, $pkgVersion)) {
-            if($snap){
+            if ($snap) {
                 throw new \Exception('Binary for <'.$extName.'-'.$pkgVersion.'> cannot be found');
-            }else{
+            } else {
                 return $this->fetchZipName(true);
             }
         }
@@ -160,9 +159,9 @@ class Binary
         $fileUrl = $this->findInLinks($baseUrl.$extName.'/'.$pkgVersion, $fileToFind);
 
         if (!$fileUrl) {
-            if($snap){
+            if ($snap) {
                 throw new \Exception('Binary for <'.$fileToFind.'> cannot be found');
-            }else{
+            } else {
                 return $this->fetchZipName(true);
             }
         }
@@ -182,7 +181,7 @@ class Binary
         $this->createTempDir($this->extName);
         $this->cleanup();
         $zipArchive = new \ZipArchive();
-        if ($zipArchive->open($zipFile) !== true || !$zipArchive->extractTo($this->tempDir)) {
+        if (true !== $zipArchive->open($zipFile) || !$zipArchive->extractTo($this->tempDir)) {
             throw new \Exception('Cannot extract Zip archive <'.$zipFile.'>');
         }
         $this->output->writeln('Extracting archives...');
@@ -202,12 +201,12 @@ class Binary
         $progress = $this->progress;
 
         $ctx = stream_context_create(
-            array(
+            [
                 'http' => [
-                    'header' => 'User-Agent: pickle'
-                ]
-            ),
-            array(
+                    'header' => 'User-Agent: pickle',
+                ],
+            ],
+            [
                 'notification' => function ($notificationCode, $severity, $message, $messageCode, $bytesTransferred, $bytesMax) use ($output, $progress) {
                     switch ($notificationCode) {
                         case STREAM_NOTIFY_FILE_SIZE_IS:
@@ -218,7 +217,7 @@ class Binary
                             break;
                     }
                 },
-            )
+            ]
         );
         $output->writeln("downloading $url ");
         $fileContents = file_get_contents($url, false, $ctx);
@@ -245,8 +244,8 @@ class Binary
         foreach ($DLLs as $dll) {
             $dll = realpath($dll);
             $basename = basename($dll);
-            $dest = $this->php->getExtensionDir().DIRECTORY_SEPARATOR.$basename;
-            if (substr($basename, 0, 4) == 'php_') {
+            $dest = $this->php->getExtensionDir().\DIRECTORY_SEPARATOR.$basename;
+            if ('php_' == substr($basename, 0, 4)) {
                 $this->extDll[] = $basename;
                 $this->output->writeln("copying $dll to ".$dest."\n");
                 $success = @copy($dll, $this->php->getExtensionDir().'/'.$basename);
@@ -254,7 +253,7 @@ class Binary
                     throw new \Exception('Cannot copy DLL <'.$dll.'> to <'.$dest.'>');
                 }
             } else {
-                $success = @copy($dll, dirname($this->php->getPath()).'/'.$basename);
+                $success = @copy($dll, \dirname($this->php->getPath()).'/'.$basename);
                 if (!$success) {
                     throw new \Exception('Cannot copy DLL <'.$dll.'> to <'.$dest.'>');
                 }
@@ -281,17 +280,17 @@ class Binary
         $url = 'https://pecl.php.net/get/'.$this->extName;
         $headers = get_headers($url);
 
-        if (strpos($headers[0], '404') !== false) {
+        if (false !== strpos($headers[0], '404')) {
             throw new \Exception('Cannot find extension <'.$this->extName.'>');
         }
         $headerPkg = false;
         foreach ($headers as $header) {
-            if (strpos($header, 'tgz') !== false) {
+            if (false !== strpos($header, 'tgz')) {
                 $headerPkg = $header;
                 break;
             }
         }
-        if ($headerPkg == false) {
+        if (false == $headerPkg) {
             throw new \Exception('Cannot find extension <'.$this->extName.'>');
         }
 
@@ -301,7 +300,7 @@ class Binary
         $packageFullname = $m[1];
 
         list($name, $version) = explode('-', $packageFullname);
-        if ($name == '' || $version == '') {
+        if ('' == $name || '' == $version) {
             throw new \Exception('Invalid response from pecl.php.net');
         }
 
@@ -329,10 +328,10 @@ class Binary
 
     public function getExtDllPaths()
     {
-        $ret = array();
+        $ret = [];
 
         foreach ($this->extDll as $dll) {
-            $ret[] = $this->php->getExtensionDir().DIRECTORY_SEPARATOR.$dll;
+            $ret[] = $this->php->getExtensionDir().\DIRECTORY_SEPARATOR.$dll;
         }
 
         return $ret;

@@ -1,8 +1,7 @@
 <?php
 
 /**
- * Pickle
- *
+ * Pickle.
  *
  * @license
  *
@@ -36,6 +35,7 @@
 
 namespace Pickle\Base\Abstracts\Console\Command;
 
+use Pickle\Base\Interfaces\Package;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
@@ -43,7 +43,6 @@ use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Question\ConfirmationQuestion;
 use Symfony\Component\Console\Question\Question;
-use Pickle\Base\Interfaces\Package;
 
 abstract class BuildCommand extends Command
 {
@@ -100,12 +99,12 @@ abstract class BuildCommand extends Command
         $force_opts = $input->getOption('with-configure-options');
 
         // $force_opts 为空
-        if(!$force_opts){
-           // 尝试加载固定的文件 /tmp/EXT.configure.options
-           $force_opts ="/tmp/".$package->getName().".configure.options";
-           if (!file_exists($force_opts) || !is_file($force_opts) || !is_readable($force_opts)) {
-               $force_opts = null;
-           }
+        if (!$force_opts) {
+            // 尝试加载固定的文件 /tmp/EXT.configure.options
+            $force_opts = '/tmp/'.$package->getName().'.configure.options';
+            if (!file_exists($force_opts) || !is_file($force_opts) || !is_readable($force_opts)) {
+                $force_opts = null;
+            }
         }
 
         if ($force_opts) {
@@ -137,7 +136,7 @@ abstract class BuildCommand extends Command
             if ($input->getOption('defaults')) {
                 $value = $opt->default;
             } else {
-                if ($opt->type == 'enable') {
+                if ('enable' == $opt->type) {
                     $prompt = new ConfirmationQuestion($opt->prompt.' (default: '.($opt->default ? 'yes' : 'no').'): ', $opt->default);
                 } else {
                     $prompt = new Question($opt->prompt.' (default: '.($opt->default ? $opt->default : '').'): ', $opt->default);

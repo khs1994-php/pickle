@@ -1,8 +1,7 @@
 <?php
 
 /**
- * Pickle
- *
+ * Pickle.
  *
  * @license
  *
@@ -36,8 +35,8 @@
 
 namespace Pickle\Base\Abstracts\Package;
 
-use Pickle\Base\Util\FileOps;
 use Pickle\Base\Interfaces\Package;
+use Pickle\Base\Util\FileOps;
 
 abstract class Build
 {
@@ -45,7 +44,7 @@ abstract class Build
 
     protected $pkg;
     protected $options;
-    protected $log = array();
+    protected $log = [];
     protected $cwdBack;
 
     public function __construct(Package $pkg, $options = null)
@@ -70,7 +69,7 @@ abstract class Build
 
     public function getLog($hint = null)
     {
-        $ret = array();
+        $ret = [];
 
         foreach ($this->log as $item) {
             if (isset($hint) && $hint !== $item['hint']) {
@@ -93,7 +92,7 @@ abstract class Build
             }
         }
 
-        $def_fl = $path.DIRECTORY_SEPARATOR.'build.log';
+        $def_fl = $path.\DIRECTORY_SEPARATOR.'build.log';
         if (file_exists($def_fl)) {
             unlink($def_fl);
         }
@@ -102,9 +101,9 @@ abstract class Build
     protected function getLogFilename($path, $log_item, $def_fl, array &$logs)
     {
         $is_hint = (isset($log_item['hint']) && !empty($log_item['hint']));
-        $fname = $is_hint ? $path.DIRECTORY_SEPARATOR."$log_item[hint].log" : $def_fl;
+        $fname = $is_hint ? $path.\DIRECTORY_SEPARATOR."$log_item[hint].log" : $def_fl;
 
-        if (!in_array($fname, $logs)) {
+        if (!\in_array($fname, $logs)) {
             if (file_exists($fname)) {
                 unlink($fname);
             }
@@ -116,7 +115,7 @@ abstract class Build
 
     public function saveLog($path)
     {
-        $logs = array();
+        $logs = [];
         $def_fl = null;
 
         $this->prepareSaveLog($path, $def_fl);
@@ -124,7 +123,7 @@ abstract class Build
         foreach ($this->log as $item) {
             $fname = $this->getLogFilename($path, $item, $def_fl, $logs);
 
-            if (file_put_contents($fname, "$item[msg]\n", FILE_APPEND) != strlen($item['msg']) + 1) {
+            if (file_put_contents($fname, "$item[msg]\n", FILE_APPEND) != \strlen($item['msg']) + 1) {
                 throw new \Exception("Couldn't write contents to '$fname'");
             }
         }
@@ -132,7 +131,7 @@ abstract class Build
 
     protected function fixEol($s)
     {
-        if (defined('PHP_WINDOWS_VERSION_MAJOR')) {
+        if (\defined('PHP_WINDOWS_VERSION_MAJOR')) {
             $ret = preg_replace(",(?!\r)\n,", "\r\n", $s);
         } else {
             $ret = $s;
@@ -144,7 +143,7 @@ abstract class Build
     /* zip is default */
     public function packLog($path)
     {
-        $logs = array();
+        $logs = [];
 
         $zip = new \ZipArchive();
         if (!$zip->open($path, \ZipArchive::CREATE | \ZipArchive::OVERWRITE)) {
@@ -181,18 +180,16 @@ abstract class Build
         $this->log(1, $command, $hint);
         $pp = popen("$command 2>&1", 'r');
         if (!$pp) {
-            throw new \Exception(
-                'Failed to run the following command: '.$command
-            );
+            throw new \Exception('Failed to run the following command: '.$command);
         }
 
-        $out = array();
+        $out = [];
         while ($line = fgets($pp, 1024)) {
             $out[] = rtrim($line);
         }
         $this->log(2, implode("\n", $out), $hint);
 
-        $exitCode = is_resource($pp) ? pclose($pp) : -1;
+        $exitCode = \is_resource($pp) ? pclose($pp) : -1;
 
         return 0 === $exitCode;
     }

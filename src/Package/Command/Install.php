@@ -1,8 +1,7 @@
 <?php
 
 /**
- * Pickle
- *
+ * Pickle.
  *
  * @license
  *
@@ -38,7 +37,6 @@ namespace Pickle\Package\Command;
 
 use Pickle\Engine;
 use Pickle\Package\PHP;
-use Pickle\Package\HHVM;
 
 class Install
 {
@@ -48,19 +46,15 @@ class Install
 
         switch ($engine->getName()) {
             case 'php':
-                if (defined('PHP_WINDOWS_VERSION_MAJOR')) {
+                if (\defined('PHP_WINDOWS_VERSION_MAJOR')) {
                     return new PHP\Command\Install\Windows\Binary($path);
                 } else {
-                    throw new \Exception(
-                        'On Unix Build::factory() functionality should be used to implememnt installation, '.
-                        'except you really need to install a binary.'
-                    );
+                    throw new \Exception('On Unix Build::factory() functionality should be used to implememnt installation, '.'except you really need to install a binary.');
                 }
 
                 // no break
             case 'hhvm':
                 throw new \Exception("Not implemented for engine '{$engine->getName()}'");
-
             default:
                 throw new \Exception("Unsupported engine '{$engine->getName()}'. Implement it!");
         }

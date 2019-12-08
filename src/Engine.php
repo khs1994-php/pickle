@@ -1,8 +1,7 @@
 <?php
 
 /**
- * Pickle
- *
+ * Pickle.
  *
  * @license
  *
@@ -50,7 +49,7 @@ class Engine
                 $phpcli = PHP_BINARY;
             }
 
-            if (defined('HHVM_VERSION')) {
+            if (\defined('HHVM_VERSION')) {
                 /* This needs to be checked first, PHP_VERSION is
                    defined in HHVM. */
                 self::$instance = new HHVM($phpcli);

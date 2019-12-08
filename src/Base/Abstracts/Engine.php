@@ -1,8 +1,7 @@
 <?php
 
 /**
- * Pickle
- *
+ * Pickle.
  *
  * @license
  *
@@ -44,7 +43,7 @@ abstract class Engine
         might need to override this. */
         $is_64_bit = 8 == PHP_INT_SIZE;
 
-        if (defined('PHP_WINDOWS_VERSION_MAJOR')) {
+        if (\defined('PHP_WINDOWS_VERSION_MAJOR')) {
             if ($is_64_bit) {
                 return 'x64';
             } else {

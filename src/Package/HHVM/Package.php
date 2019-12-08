@@ -1,8 +1,7 @@
 <?php
 
 /**
- * Pickle
- *
+ * Pickle.
  *
  * @license
  *
@@ -59,7 +58,7 @@ class Package extends Abstracts\Package implements \Pickle\Base\Interfaces\Packa
             throw new \Exception("Couldn't determine package source dir");
         }
 
-        return dirname($conf[0]);
+        return \dirname($conf[0]);
     }
 
     public function setStability($stability)
@@ -69,7 +68,7 @@ class Package extends Abstracts\Package implements \Pickle\Base\Interfaces\Packa
 
     public function getConfigureOptions()
     {
-        return array();
+        return [];
     }
 }
 

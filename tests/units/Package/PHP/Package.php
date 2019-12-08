@@ -1,8 +1,7 @@
 <?php
 
 /**
- * Pickle
- *
+ * Pickle.
  *
  * @license
  *
@@ -51,13 +50,13 @@ class Package extends atoum
         $this->packageVersion = $this->realdom->regex('/\d+(\.\d+){3}/');
         $this->packagePrettyVersion = $this->realdom->regex('/\d+(\.\d+){2}/');
 
-        $windows = defined('PHP_WINDOWS_VERSION_MAJOR');
+        $windows = \defined('PHP_WINDOWS_VERSION_MAJOR');
 
-        if ($method === 'testGetConfigureOptionsWindows' && $windows === false) {
-            define('PHP_WINDOWS_VERSION_MAJOR', uniqid());
+        if ('testGetConfigureOptionsWindows' === $method && false === $windows) {
+            \define('PHP_WINDOWS_VERSION_MAJOR', uniqid());
         }
 
-        if ($method === 'testGetConfigureOptions' && $windows) {
+        if ('testGetConfigureOptions' === $method && $windows) {
             $this->skip('Cannot run on Windows');
         }
     }
@@ -87,7 +86,7 @@ class Package extends atoum
                 $name = $this->sample($this->packageName),
                 $version = $this->sample($this->packageVersion),
                 $prettyVersion = $this->sample($this->packagePrettyVersion),
-                $packageRoot = FIXTURES_DIR . DIRECTORY_SEPARATOR . "package"
+                $packageRoot = FIXTURES_DIR.\DIRECTORY_SEPARATOR.'package'
             )
             ->if(
                 $this->newTestedInstance($name, $version, $prettyVersion),
@@ -109,7 +108,7 @@ class Package extends atoum
             ->if(
                 $this->newTestedInstance($name, $version, $prettyVersion),
                 list($packageRoot, $packageSourceRoot) = $this->createTmpPackageStruct(),
-                $configM4 = $packageSourceRoot . DIRECTORY_SEPARATOR . 'config.m4',
+                $configM4 = $packageSourceRoot.\DIRECTORY_SEPARATOR.'config.m4',
                 file_put_contents($configM4, $config),
                 $this->testedInstance->setRootDir((string) $packageRoot)
             )
@@ -219,7 +218,7 @@ class Package extends atoum
             ->if(
                 $this->newTestedInstance($name, $version, $prettyVersion),
                 list($packageRoot, $packageSourceRoot) = $this->createTmpPackageStruct(),
-                $configW32 = $packageSourceRoot . DIRECTORY_SEPARATOR . 'config.w32',
+                $configW32 = $packageSourceRoot.\DIRECTORY_SEPARATOR.'config.w32',
                 file_put_contents($configW32, $config),
                 $this->testedInstance->setRootDir((string) $packageRoot)
             )
@@ -290,7 +289,7 @@ class Package extends atoum
                 ->string($this->testedInstance->getRootDir())->isEqualTo((string) $packageRoot)
             ->if(
                 clearstatcache(),
-                $packageSourceRoot = fs\directory::getSubStream($packageRoot, $this->testedInstance->getPrettyName() . '-' . $this->testedInstance->getPrettyVersion()),
+                $packageSourceRoot = fs\directory::getSubStream($packageRoot, $this->testedInstance->getPrettyName().'-'.$this->testedInstance->getPrettyVersion()),
                 $packageSourceRoot->url_stat = ['mode' => 17000] // Be a directory
             )
             ->then
@@ -305,7 +304,7 @@ class Package extends atoum
                 $name = $this->sample($this->packageName),
                 $version = $this->sample($this->packageVersion),
                 $prettyVersion = $this->sample($this->packagePrettyVersion),
-                $packageRoot = FIXTURES_DIR . DIRECTORY_SEPARATOR . "package"
+                $packageRoot = FIXTURES_DIR.\DIRECTORY_SEPARATOR.'package'
             )
             ->if(
                 $this->newTestedInstance($name, $version, $prettyVersion),
@@ -332,27 +331,27 @@ class Package extends atoum
                 $name = $this->sample($this->packageName),
                 $version = $this->sample($this->packageVersion),
                 $prettyVersion = $this->sample($this->packagePrettyVersion),
-                $packageRoot = FIXTURES_DIR . DIRECTORY_SEPARATOR . "package-subdir-src"
+                $packageRoot = FIXTURES_DIR.\DIRECTORY_SEPARATOR.'package-subdir-src'
             )
             ->if(
                 $this->newTestedInstance($name, $version, $prettyVersion),
                 $this->testedInstance->setRootDir((string) $packageRoot)
             )
             ->then
-                ->string($this->testedInstance->getSourceDir())->isEqualTo(((string) $packageRoot) . DIRECTORY_SEPARATOR . "ext-source")
+                ->string($this->testedInstance->getSourceDir())->isEqualTo(((string) $packageRoot).\DIRECTORY_SEPARATOR.'ext-source')
         ;
     }
 
     protected function createTmpPackageStruct()
     {
-        $packageRoot = FIXTURES_DIR . DIRECTORY_SEPARATOR . "package-" . md5(uniqid());
-        $packageSourceRoot = $packageRoot . DIRECTORY_SEPARATOR . $this->testedInstance->getPrettyName() . '-' . $this->testedInstance->getPrettyVersion();
+        $packageRoot = FIXTURES_DIR.\DIRECTORY_SEPARATOR.'package-'.md5(uniqid());
+        $packageSourceRoot = $packageRoot.\DIRECTORY_SEPARATOR.$this->testedInstance->getPrettyName().'-'.$this->testedInstance->getPrettyVersion();
         mkdir($packageRoot);
         mkdir($packageSourceRoot);
-        file_put_contents($packageSourceRoot . DIRECTORY_SEPARATOR . "config.w32", "");
-        file_put_contents($packageSourceRoot . DIRECTORY_SEPARATOR . "config0.m4", "");
+        file_put_contents($packageSourceRoot.\DIRECTORY_SEPARATOR.'config.w32', '');
+        file_put_contents($packageSourceRoot.\DIRECTORY_SEPARATOR.'config0.m4', '');
 
-        return array($packageRoot, $packageSourceRoot);
+        return [$packageRoot, $packageSourceRoot];
     }
 
     protected function removeTmpPackageStruct($packageRoot, $packageSourceRoot)
@@ -361,8 +360,8 @@ class Package extends atoum
             $packageSourceRoot = $packageRoot;
         }
 
-        unlink($packageSourceRoot . DIRECTORY_SEPARATOR . "config.w32");
-        foreach (glob($packageSourceRoot . DIRECTORY_SEPARATOR . "config*.m4") as $f) {
+        unlink($packageSourceRoot.\DIRECTORY_SEPARATOR.'config.w32');
+        foreach (glob($packageSourceRoot.\DIRECTORY_SEPARATOR.'config*.m4') as $f) {
             unlink($f);
         }
         rmdir($packageSourceRoot);

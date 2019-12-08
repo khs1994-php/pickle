@@ -1,8 +1,7 @@
 <?php
 
 /**
- * Pickle
- *
+ * Pickle.
  *
  * @license
  *
@@ -51,7 +50,7 @@ class GitIgnore
         $this->excluded = [
             "$dir/.git/", "$dir/.gitignore", "$dir/.gitmodules",
         ];
-        if (is_file($path) === false) {
+        if (false === is_file($path)) {
             throw new \InvalidArgumentException('File not found: '.$path);
         }
 
@@ -71,7 +70,7 @@ class GitIgnore
             } else {
                 $files = [];
 
-                if (substr($line, -1) !== '/') {
+                if ('/' !== substr($line, -1)) {
                     $files = glob("$dir/$line");
 
                     $line .= '/';
@@ -86,13 +85,13 @@ class GitIgnore
 
     public function __invoke(\SplFileInfo $file)
     {
-        return $this->isExcluded($file) === false;
+        return false === $this->isExcluded($file);
     }
 
     public function isExcluded(\SplFileInfo $file)
     {
         foreach ($this->excluded as $path) {
-            if (!strncmp($file, $path, strlen($path))) {
+            if (!strncmp($file, $path, \strlen($path))) {
                 return true;
             }
         }

@@ -1,8 +1,7 @@
 <?php
 
 /**
- * Pickle
- *
+ * Pickle.
  *
  * @license
  *
@@ -53,7 +52,6 @@ class Loader implements LoaderInterface
     }
 
     /**
-     * @param array  $config
      * @param string $package
      *
      * @return \Pickle\Base\Interfaces\Package $package
@@ -67,7 +65,7 @@ class Loader implements LoaderInterface
             $package = Package::factory($config['name'], '', '', true);
         }
 
-        if (isset($config['type']) && $config['type'] != 'extension') {
+        if (isset($config['type']) && 'extension' != $config['type']) {
             throw new \UnexpectedValueException($package->getName().' is not a extension(s) package');
         }
         $package->setType('extension');
@@ -125,7 +123,7 @@ class Loader implements LoaderInterface
     protected function setPackageLicense(Interfaces\Package $package, array $config)
     {
         if (!empty($config['license'])) {
-            $package->setLicense(is_array($config['license']) ? $config['license'] : array($config['license']));
+            $package->setLicense(\is_array($config['license']) ? $config['license'] : [$config['license']]);
         }
     }
 
@@ -147,10 +145,10 @@ class Loader implements LoaderInterface
     {
         switch ($type) {
             case 'string':
-                return isset($config[$key]) && !empty($config[$key]) && is_string($config[$key]);
+                return isset($config[$key]) && !empty($config[$key]) && \is_string($config[$key]);
 
             case 'array':
-                return isset($config[$key]) && !empty($config[$key]) && is_array($config[$key]);
+                return isset($config[$key]) && !empty($config[$key]) && \is_array($config[$key]);
         }
 
         return false;
@@ -163,11 +161,7 @@ class Loader implements LoaderInterface
         }
 
         if (!isset($config['source']['type']) || !isset($config['source']['url']) || !isset($config['source']['reference'])) {
-            throw new \UnexpectedValueException(sprintf(
-                "Package %s's source key should be specified as {\"type\": ..., \"url\": ..., \"reference\": ...},\n%s given.",
-                $config['name'],
-                json_encode($config['source'])
-            ));
+            throw new \UnexpectedValueException(sprintf("Package %s's source key should be specified as {\"type\": ..., \"url\": ..., \"reference\": ...},\n%s given.", $config['name'], json_encode($config['source'])));
         }
         $package->setSourceType($config['source']['type']);
         $package->setSourceUrl($config['source']['url']);
@@ -185,12 +179,7 @@ class Loader implements LoaderInterface
 
         if (!isset($config['dist']['type'])
             || !isset($config['dist']['url'])) {
-            throw new \UnexpectedValueException(sprintf(
-                "Package %s's dist key should be specified as ".
-                "{\"type\": ..., \"url\": ..., \"reference\": ..., \"shasum\": ...},\n%s given.",
-                $config['name'],
-                json_encode($config['dist'])
-            ));
+            throw new \UnexpectedValueException(sprintf("Package %s's dist key should be specified as "."{\"type\": ..., \"url\": ..., \"reference\": ..., \"shasum\": ...},\n%s given.", $config['name'], json_encode($config['dist'])));
         }
 
         $package->setDistType($config['dist']['type']);

@@ -1,8 +1,7 @@
 <?php
 
 /**
- * Pickle
- *
+ * Pickle.
  *
  * @license
  *
@@ -38,7 +37,7 @@ use Behat\Gherkin\Node\PyStringNode;
 use Symfony\Component\Process\PhpExecutableFinder;
 use Symfony\Component\Process\Process;
 
-define('PICKLE_TEST_PATH', sys_get_temp_dir() . '/pickle');
+define('PICKLE_TEST_PATH', sys_get_temp_dir().'/pickle');
 
 /**
  * @see https://github.com/Behat/Behat/blob/master/features/bootstrap/FeatureContext.php
@@ -74,7 +73,7 @@ class FeatureContext implements SnippetAcceptingContext
      */
     public function prepare()
     {
-        $this->dir = PICKLE_TEST_PATH . DIRECTORY_SEPARATOR . md5(microtime() * rand(0, 10000));
+        $this->dir = PICKLE_TEST_PATH.DIRECTORY_SEPARATOR.md5(microtime() * rand(0, 10000));
 
         $phpFinder = new PhpExecutableFinder();
         if (false === $php = $phpFinder->find()) {
@@ -93,7 +92,7 @@ class FeatureContext implements SnippetAcceptingContext
 
     private function moveToNewPath($path)
     {
-        $newWorkingDir = $this->workingDir .'/' . $path;
+        $newWorkingDir = $this->workingDir.'/'.$path;
 
         if (!file_exists($newWorkingDir)) {
             mkdir($newWorkingDir, 0777, true);
@@ -115,14 +114,14 @@ class FeatureContext implements SnippetAcceptingContext
      */
     public function iRunPickle($argumentsString = '')
     {
-        $argumentsString = strtr($argumentsString, array('\'' => '"'));
+        $argumentsString = strtr($argumentsString, ['\'' => '"']);
 
         $this->process->setWorkingDirectory($this->workingDir);
         $this->process->setCommandLine(
             sprintf(
                 '%s %s --no-ansi %s',
                 $this->php,
-                escapeshellarg(__DIR__ . '/../../' . static::PICKLE_BIN),
+                escapeshellarg(__DIR__.'/../../'.static::PICKLE_BIN),
                 $argumentsString
             )
         );
@@ -146,13 +145,13 @@ class FeatureContext implements SnippetAcceptingContext
     {
         if ('fail' === $success) {
             if (0 === $this->getExitCode()) {
-                echo 'Actual output:' . PHP_EOL . PHP_EOL . $this->getOutput();
+                echo 'Actual output:'.PHP_EOL.PHP_EOL.$this->getOutput();
             }
 
             $this->assert->integer($this->getExitCode())->isGreaterThan(0);
         } else {
             if (0 !== $this->getExitCode()) {
-                echo 'Actual output:' . PHP_EOL . PHP_EOL . $this->getOutput();
+                echo 'Actual output:'.PHP_EOL.PHP_EOL.$this->getOutput();
             }
 
             $this->assert->integer($this->getExitCode())->isZero;
@@ -173,8 +172,8 @@ class FeatureContext implements SnippetAcceptingContext
      */
     public function aFileNamedWith($filename, PyStringNode $content)
     {
-        $content = strtr((string) $content, array("'''" => '"""'));
-        $this->createFile($this->workingDir . '/' . $filename, $content);
+        $content = strtr((string) $content, ["'''" => '"""']);
+        $this->createFile($this->workingDir.'/'.$filename, $content);
     }
 
     /**
@@ -182,8 +181,8 @@ class FeatureContext implements SnippetAcceptingContext
      */
     public function fileShouldExist($path)
     {
-        $path = $this->workingDir . '/' . $path;
-        $this->assert->boolean(file_exists($path))->isTrue('File ' . $path . ' does not exist');
+        $path = $this->workingDir.'/'.$path;
+        $this->assert->boolean(file_exists($path))->isTrue('File '.$path.' does not exist');
     }
 
     /**
@@ -193,7 +192,7 @@ class FeatureContext implements SnippetAcceptingContext
     {
         $this->fileShouldExist($path);
 
-        $path = $this->workingDir . '/' . $path;
+        $path = $this->workingDir.'/'.$path;
 
         $fileContent = trim(file_get_contents($path));
         // Normalize the line endings in the output
@@ -211,7 +210,7 @@ class FeatureContext implements SnippetAcceptingContext
     {
         $this->fileShouldExist($path);
 
-        $path = $this->workingDir . '/' . $path;
+        $path = $this->workingDir.'/'.$path;
 
         $fileContent = json_decode(file_get_contents($path));
         $this->assert->object($fileContent)->isEqualTo(json_decode($text));
@@ -238,14 +237,14 @@ class FeatureContext implements SnippetAcceptingContext
 
     private function getOutput()
     {
-        $output = $this->process->getErrorOutput() . $this->process->getOutput();
+        $output = $this->process->getErrorOutput().$this->process->getOutput();
 
         // Normalize the line endings in the output
         if ("\n" !== PHP_EOL) {
             $output = str_replace(PHP_EOL, "\n", $output);
         }
 
-        return trim(preg_replace("/ +$/m", '', $output));
+        return trim(preg_replace('/ +$/m', '', $output));
     }
 
     private function getExpectedOutput(PyStringNode $expectedText)
@@ -269,7 +268,7 @@ class FeatureContext implements SnippetAcceptingContext
         array_shift($files);
 
         foreach ($files as $file) {
-            $file = $path . DIRECTORY_SEPARATOR . $file;
+            $file = $path.DIRECTORY_SEPARATOR.$file;
             if (is_dir($file)) {
                 self::clearDirectory($file);
             } else {
@@ -285,17 +284,17 @@ class FeatureContext implements SnippetAcceptingContext
      */
     public function extensionExists($name, $version)
     {
-        $url = 'https://pecl.php.net/get/' . $name . '/' . $version;
-        $file = $name . '-' . $version . '.tgz';
-        $dir = $this->workingDir . '/' . basename($file, '.tgz');
+        $url = 'https://pecl.php.net/get/'.$name.'/'.$version;
+        $file = $name.'-'.$version.'.tgz';
+        $dir = $this->workingDir.'/'.basename($file, '.tgz');
 
-        if (is_dir($dir) === false) {
+        if (false === is_dir($dir)) {
             mkdir($dir, 0777, true);
         }
 
-        file_put_contents($dir . '/' . $file, file_get_contents($url));
+        file_put_contents($dir.'/'.$file, file_get_contents($url));
 
-        $p = new PharData($dir . '/' . $file);
+        $p = new PharData($dir.'/'.$file);
         $phar = $p->decompress('.tgz');
         $phar->extractTo($dir);
     }

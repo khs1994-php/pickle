@@ -1,8 +1,7 @@
 <?php
 
 /**
- * Pickle
- *
+ * Pickle.
  *
  * @license
  *
@@ -76,7 +75,7 @@ class Unix extends Abstracts\Package\Build implements Interfaces\Package\Build
         }
     }
 
-    public function install($php,$strip,$cleanup)
+    public function install($php, $strip, $cleanup)
     {
         $newcwd = $this->pkg->getSourceDir();
         $res = $this->runCommand("cd $newcwd && make install");
@@ -90,13 +89,13 @@ class Unix extends Abstracts\Package\Build implements Interfaces\Package\Build
     protected function updateIni()
     {
         $ini = \Pickle\Engine\Ini::factory(\Pickle\Engine::factory());
-        $ini->updatePickleSection(array($this->pkg->getName()));
+        $ini->updatePickleSection([$this->pkg->getName()]);
     }
 
     public function getInfo()
     {
         /* XXX implementat it */
-        return array();
+        return [];
     }
 }
 

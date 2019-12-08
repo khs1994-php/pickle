@@ -1,8 +1,7 @@
 <?php
 
 /**
- * Pickle
- *
+ * Pickle.
  *
  * @license
  *
@@ -37,7 +36,6 @@
 namespace Pickle\Package\PHP\Convey\Command;
 
 use Pickle\Base\Interfaces;
-use Pickle\Package\PHP;
 use Pickle\Package\PHP\Util\PackageXml;
 use Symfony\Component\Finder\Finder;
 
@@ -47,35 +45,36 @@ class DefaultExecutor implements Interfaces\Package\Convey\DefaultExecutor
     {
     }
 
-    public function generatePickleJson($target,$pickle_json){
+    public function generatePickleJson($target, $pickle_json)
+    {
         $files = (new Finder())->in($target)->files()->name('/^php_.*\.h$/');
-        foreach($files as $file){
+        foreach ($files as $file) {
             $name = $file->getRelativePathname();
-            $name = \substr($name,4);
-            $name = \substr($name,0,-2);
-            if(strpos($file->getContents(),'PHP_'.\strtoupper($name).'_VERSION')){
+            $name = substr($name, 4);
+            $name = substr($name, 0, -2);
+            if (strpos($file->getContents(), 'PHP_'.strtoupper($name).'_VERSION')) {
                 break;
             }
         }
 
-        if(!$name){
+        if (!$name) {
             throw new \Exception('get package name error');
         }
 
-        $pickle_json_content = \json_encode([
+        $pickle_json_content = json_encode([
            'name' => $name,
            'type' => 'extension',
-           "description" => 'extension not include package.xml, this file is auto generate'
+           'description' => 'extension not include package.xml, this file is auto generate',
         ]);
 
-        \file_put_contents($pickle_json,$pickle_json_content);
+        file_put_contents($pickle_json, $pickle_json_content);
     }
 
     public function execute($target, $no_convert)
     {
         $jsonLoader = new \Pickle\Package\Util\JSON\Loader(new \Pickle\Package\Util\Loader());
-        $pickle_json = $target.DIRECTORY_SEPARATOR.'composer.json';
-        $package_xml = $target.DIRECTORY_SEPARATOR.'package.xml';
+        $pickle_json = $target.\DIRECTORY_SEPARATOR.'composer.json';
+        $package_xml = $target.\DIRECTORY_SEPARATOR.'package.xml';
         $package = null;
 
         if (file_exists($pickle_json)) {
@@ -83,8 +82,8 @@ class DefaultExecutor implements Interfaces\Package\Convey\DefaultExecutor
         }
 
         // xml 文件不存在，尝试生成 composer.json
-        if(!file_exists($package_xml)){
-            $this->generatePickleJson($target,$pickle_json);
+        if (!file_exists($package_xml)) {
+            $this->generatePickleJson($target, $pickle_json);
             $package = $jsonLoader->load($pickle_json);
         }
 
@@ -95,26 +94,26 @@ class DefaultExecutor implements Interfaces\Package\Convey\DefaultExecutor
 
         // 从 composer.json 获取 package 失败，从 xml 文件转化
         if (null === $package) {
-            try{
+            try {
                 $pkgXml = new PackageXml($target);
                 $pkgXml->dump();
- 
+
                 $jsonPath = $pkgXml->getJsonPath();
                 unset($package);
 
                 $package = $jsonLoader->load($jsonPath);
-            }catch(\Exception $e){
+            } catch (\Exception $e) {
                 echo $e->getMessage();
                 // 7.2 及以下内置扩展的 package.xml 为 1.0 版本，不支持
                 // 从 package.xml 转 package.json 出现错误
                 // 尝试生成 package.json
-                $this->generatePickleJson($target,$pickle_json);
+                $this->generatePickleJson($target, $pickle_json);
                 $package = $jsonLoader->load($pickle_json);
             }
         }
 
-        if($package ===null){
-            throw new \Exception('Conver package.json error'); 
+        if (null === $package) {
+            throw new \Exception('Conver package.json error');
         }
 
         $package->setRootDir($target);

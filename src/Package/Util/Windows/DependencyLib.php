@@ -1,8 +1,7 @@
 <?php
 
 /**
- * Pickle
- *
+ * Pickle.
  *
  * @license
  *
@@ -36,10 +35,10 @@
 
 namespace Pickle\Package\Util\Windows;
 
+use Pickle\Base\Util;
+use Pickle\Base\Util\FileOps;
 use Symfony\Component\Console\Input\InputInterface as InputInterface;
 use Symfony\Component\Console\Output\OutputInterface as OutputInterface;
-use Pickle\Base\Util\FileOps;
-use Pickle\Base\Util;
 
 class DependencyLib
 {
@@ -56,7 +55,7 @@ class DependencyLib
     private $input = null;
     private $output = null;
 
-    private $fetchedZips = array();
+    private $fetchedZips = [];
 
     public function __construct(\Pickle\Base\Interfaces\Engine $php)
     {
@@ -69,11 +68,11 @@ class DependencyLib
     {
         $dllMap = null;
 
-        if (is_null($this->dllMap)) {
+        if (null === $this->dllMap) {
             $opts = [
                 'http' => [
-                    'header' => 'User-Agent: pickle'
-                ]
+                    'header' => 'User-Agent: pickle',
+                ],
             ];
             $context = stream_context_create($opts);
             $data = @file_get_contents(self::DLL_MAP_URL, false, $context);
@@ -91,7 +90,7 @@ class DependencyLib
             /* Just for the case the given compiler/arch set isn't defined in the dllmap,
            or we've got a corrupted file, or ...
            The dllMap property should be ensured an array. */
-            $this->dllMap = array();
+            $this->dllMap = [];
         } else {
             $this->dllMap = $dllMap->{$compiler}->{$architecture};
         }
@@ -107,8 +106,8 @@ class DependencyLib
             if (!$depexe) {
                 throw new \RuntimeException('Cannot fetch deplister.exe');
             }
-            $dir = dirname($this->php->getPath());
-            $path = $dir.DIRECTORY_SEPARATOR.'deplister.exe';
+            $dir = \dirname($this->php->getPath());
+            $path = $dir.\DIRECTORY_SEPARATOR.'deplister.exe';
             if (!@file_put_contents($path, $depexe)) {
                 throw new \RuntimeException('Cannot copy deplister.exe to '.$dir);
             }
@@ -127,7 +126,7 @@ class DependencyLib
             list($dllname, $found) = explode(',', $l);
             $found = trim($found);
             $dllname = trim($dllname);
-            $dlls[$dllname] = $found == 'OK' ? true : false;
+            $dlls[$dllname] = 'OK' == $found ? true : false;
         }
 
         return $dlls;
@@ -139,7 +138,7 @@ class DependencyLib
         $packages = [];
         foreach ($this->dllMap as $pkg_name => $pkg) {
             foreach ($dll as $dll_name => $dll_installed) {
-                if (in_array($dll_name, $pkg)) {
+                if (\in_array($dll_name, $pkg)) {
                     if ($ignore_installed && $dll_installed) {
                         continue;
                     }
@@ -157,16 +156,16 @@ class DependencyLib
         /* XXX Change it to false and implement a kinda --force option for that. */
         $dep_zips = $this->getZipUrlsForDll($dll, false);
 
-        if (count($dep_zips) == 1) {
+        if (1 == \count($dep_zips)) {
             $dep_zip = $dep_zips[0];
 
-            if (in_array($dep_zip, $this->fetchedZips)) {
+            if (\in_array($dep_zip, $this->fetchedZips)) {
                 return true;
             }
-        } elseif (count($dep_zips) > 1) {
+        } elseif (\count($dep_zips) > 1) {
             foreach ($dep_zips as $dep_zip) {
                 /* The user has already picked one here, ignore it. */
-                if (in_array($dep_zip, $this->fetchedZips)) {
+                if (\in_array($dep_zip, $this->fetchedZips)) {
                     return true;
                 }
             }
@@ -188,7 +187,7 @@ class DependencyLib
 
     public function resolveForZip($zip_name, $resolve_multiple_cb = null)
     {
-        if (in_array($zip_name, $this->fetchedZips)) {
+        if (\in_array($zip_name, $this->fetchedZips)) {
             return true;
         }
 
@@ -213,15 +212,15 @@ class DependencyLib
 
     private function copyFiles()
     {
-        $ret = array();
-        $DLLs = glob($this->tempDir.DIRECTORY_SEPARATOR.'bin'.DIRECTORY_SEPARATOR.'*.dll');
+        $ret = [];
+        $DLLs = glob($this->tempDir.\DIRECTORY_SEPARATOR.'bin'.\DIRECTORY_SEPARATOR.'*.dll');
 
         /* Copying ALL files from the zip, not just required. */
         foreach ($DLLs as $dll) {
             $dll = realpath($dll);
             $basename = basename($dll);
-            $dest = dirname($this->php->getPath()).DIRECTORY_SEPARATOR.$basename;
-            $success = @copy($dll, dirname($this->php->getPath()).'/'.$basename);
+            $dest = \dirname($this->php->getPath()).\DIRECTORY_SEPARATOR.$basename;
+            $success = @copy($dll, \dirname($this->php->getPath()).'/'.$basename);
             if (!$success) {
                 throw new \Exception('Cannot copy DLL <'.$dll.'> to <'.$dest.'>');
             }
@@ -238,8 +237,8 @@ class DependencyLib
         $progress = $this->progress;
 
         $ctx = stream_context_create(
-            array(),
-            array(
+            [],
+            [
                 'notification' => function ($notificationCode, $severity, $message, $messageCode, $bytesTransferred, $bytesMax) use ($output, $progress) {
                     switch ($notificationCode) {
                         case STREAM_NOTIFY_FILE_SIZE_IS:
@@ -250,7 +249,7 @@ class DependencyLib
                             break;
                     }
                 },
-            )
+            ]
         );
         $output->writeln("downloading $url ");
         $fileContents = file_get_contents($url, false, $ctx);
@@ -259,7 +258,7 @@ class DependencyLib
             throw new \Exception('Cannot fetch <'.$url.'>');
         }
         $tmpdir = Util\TmpDir::get();
-        $path = $tmpdir.DIRECTORY_SEPARATOR.basename($url);
+        $path = $tmpdir.\DIRECTORY_SEPARATOR.basename($url);
         if (!file_put_contents($path, $fileContents)) {
             throw new \Exception('Cannot save temporary file <'.$path.'>');
         }
@@ -272,7 +271,7 @@ class DependencyLib
         $this->createTempDir();
         $this->cleanup();
         $zipArchive = new \ZipArchive();
-        if ($zipArchive->open($zipFile) !== true || !$zipArchive->extractTo($this->tempDir)) {
+        if (true !== $zipArchive->open($zipFile) || !$zipArchive->extractTo($this->tempDir)) {
             throw new \Exception('Cannot extract Zip archive <'.$zipFile.'>');
         }
         $this->output->writeln('Extracting archives...');

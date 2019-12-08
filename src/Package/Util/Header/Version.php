@@ -1,8 +1,7 @@
 <?php
 
 /**
- * Pickle
- *
+ * Pickle.
  *
  * @license
  *
@@ -56,7 +55,8 @@ class Version
         $this->version = $this->getVersionFromHeader();
     }
 
-    public function getMacroName($prefix = "PHP_"){
+    public function getMacroName($prefix = 'PHP_')
+    {
         return $prefix.strtoupper($this->package->getSimpleName()).'_VERSION';
     }
 
@@ -65,7 +65,7 @@ class Version
         //$header = $this->package->getSourceDir().DIRECTORY_SEPARATOR.'php_'.$this->package->getSimpleName().'.h';
 
         if (!file_exists($header) || !$this->fileHasVersionMacro($header)) {
-            $headers = (array) glob($this->package->getSourceDir().DIRECTORY_SEPARATOR.'*.h');
+            $headers = (array) glob($this->package->getSourceDir().\DIRECTORY_SEPARATOR.'*.h');
             $found = false;
             foreach ($headers as $h) {
                 if ($this->fileHasVersionMacro($h)) {
@@ -76,8 +76,7 @@ class Version
             }
 
             if (!$found) {
-                throw new \Exception("No macro named {$this->macroName} was found in the headers. ".
-                    'This macro is recommended to be defined with the current extension version');
+                throw new \Exception("No macro named {$this->macroName} was found in the headers. ".'This macro is recommended to be defined with the current extension version');
             }
         }
 
@@ -107,7 +106,7 @@ class Version
 
         // xdebug
         // #define XDEBUG_VERSION    "2.8.0beta2"
-        $pat2 = ',define\s+'.preg_quote($this->getMacroName(""),',').'\s+'.$versionMatcher.',i';
+        $pat2 = ',define\s+'.preg_quote($this->getMacroName(''), ',').'\s+'.$versionMatcher.',i';
 
         foreach ($headers as $header) {
             // $header->getRealPath()
@@ -121,11 +120,11 @@ class Version
                 $version = trim($result[1], '"');
 
                 // check version format
-                try{
-                  (new VersionParser())->normalize($version);
-                }catch(\Exception $e){
-                  // 版本号格式不正确,继续遍历(寻找)
-                  continue;
+                try {
+                    (new VersionParser())->normalize($version);
+                } catch (\Exception $e) {
+                    // 版本号格式不正确,继续遍历(寻找)
+                    continue;
                 }
 
                 return $version;
@@ -145,7 +144,7 @@ class Version
         }
 
         $dumper = new Util\Dumper();
-        $composer_json = $this->package->getRootDir().DIRECTORY_SEPARATOR.'composer.json';
+        $composer_json = $this->package->getRootDir().\DIRECTORY_SEPARATOR.'composer.json';
 
         $this->package->replaceVersion((new VersionParser())->normalize($this->version), $this->version);
 
@@ -156,7 +155,7 @@ class Version
         }
     }
 
-    public function __tostring()
+    public function __toString()
     {
         return $this->version;
     }

@@ -1,8 +1,7 @@
 <?php
 
 /**
- * Pickle
- *
+ * Pickle.
  *
  * @license
  *
@@ -80,7 +79,7 @@ class PackageHelper extends Helper
         foreach ($package->getConfigureOptions() as $option) {
             $default = $option->default;
 
-            if ($option->type === 'enable') {
+            if ('enable' === $option->type) {
                 $option->type = '<fg=yellow>'.$option->type.'</fg=yellow>';
                 $default = $default ? '<fg=green>yes</fg=green>' : '<fg=red>no</fg=red>';
             }
@@ -96,8 +95,6 @@ class PackageHelper extends Helper
     }
 
     /**
-     * @param InputInterface  $input
-     * @param OutputInterface $output
      * @param $url
      * @param $path
      *

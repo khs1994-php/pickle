@@ -1,8 +1,7 @@
 <?php
 
 /**
- * Pickle
- *
+ * Pickle.
  *
  * @license
  *
@@ -40,7 +39,7 @@ interface Ini
 {
     public function __construct(\Pickle\Base\Interfaces\Engine $php);
 
-    public function updatePickleSection(array $dlls_add, array $dlls_del = array());
+    public function updatePickleSection(array $dlls_add, array $dlls_del = []);
 
     public function getEngine();
 }

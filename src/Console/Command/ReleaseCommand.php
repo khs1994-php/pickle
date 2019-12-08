@@ -1,8 +1,7 @@
 <?php
 
 /**
- * Pickle
- *
+ * Pickle.
  *
  * @license
  *
@@ -36,13 +35,13 @@
 
 namespace Pickle\Console\Command;
 
+use Pickle\Base\Abstracts\Console\Command\BuildCommand;
+use Pickle\Base\Interfaces;
+use Pickle\Base\Util;
+use Pickle\Package\Command\Release;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
-use Pickle\Base\Interfaces;
-use Pickle\Base\Abstracts\Console\Command\BuildCommand;
-use Pickle\Package\Command\Release;
-use Pickle\Base\Util;
 
 class ReleaseCommand extends BuildCommand
 {
@@ -74,7 +73,7 @@ class ReleaseCommand extends BuildCommand
                 sys_get_temp_dir()
             );
 
-        if (defined('PHP_WINDOWS_VERSION_MAJOR')) {
+        if (\defined('PHP_WINDOWS_VERSION_MAJOR')) {
             $this->addOption(
                 'binary',
                 null,
@@ -120,9 +119,9 @@ class ReleaseCommand extends BuildCommand
                 $output->writeln('The following error(s) happened: '.$e->getMessage());
             }
 
-            $args = array(
+            $args = [
                 'build' => $build,
-            );
+            ];
 
             try {
                 $release->create($args);

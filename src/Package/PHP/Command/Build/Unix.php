@@ -1,8 +1,7 @@
 <?php
 
 /**
- * Pickle
- *
+ * Pickle.
  *
  * @license
  *
@@ -41,12 +40,12 @@ use Pickle\Base\Interfaces;
 
 class Unix extends Abstracts\Package\Build implements Interfaces\Package\Build
 {
-    public function prepare($phpize="phpize")
+    public function prepare($phpize = 'phpize')
     {
         $this->phpize($phpize);
     }
 
-    public function phpize($phpize="phpize")
+    public function phpize($phpize = 'phpize')
     {
         $backCwd = getcwd();
         chdir($this->pkg->getSourceDir());
@@ -67,9 +66,9 @@ class Unix extends Abstracts\Package\Build implements Interfaces\Package\Build
             } elseif ('disable' == $option->type) {
                 false == $option->input ? 'enable' : 'disable';
             } elseif ('with' === $option->type) {
-                if ($option->input == 'yes' || $option->input == '1' || $option->type === true) {
+                if ('yes' == $option->input || '1' == $option->input || true === $option->type) {
                     $configureOptions .= ' --with-'.$name;
-                } elseif ($option->input == 'no' || $option->input == '0' || $option->type === false) {
+                } elseif ('no' == $option->input || '0' == $option->input || false === $option->type) {
                     $configureOptions .= ' --without-'.$name;
                 } else {
                     $configureOptions .= ' --with-'.$name.'='.$option->input;
@@ -114,7 +113,7 @@ class Unix extends Abstracts\Package\Build implements Interfaces\Package\Build
         }
     }
 
-    public function install($php,$strip = false,$cleanup=false)
+    public function install($php, $strip = false, $cleanup = false)
     {
         $backCwd = getcwd();
         // chdir($this->tempDir);
@@ -123,26 +122,28 @@ class Unix extends Abstracts\Package\Build implements Interfaces\Package\Build
         $res = $this->runCommand('make install');
         chdir($backCwd);
         if (!$res) {
-            $res = $this->runCommand('make -j'.$nproc .' clean');
+            $res = $this->runCommand('make -j'.$nproc.' clean');
             throw new \Exception('make install failed');
         }
-        $res = $this->runCommand('make -j'.$nproc .' clean');
+        $res = $this->runCommand('make -j'.$nproc.' clean');
 
         $strip && $this->strip($php);
         $cleanup && $this->deleteUselessFile($php);
     }
 
-    public function strip($php){
-        $res = $this->runCommand('strip --strip-all '.$php->getExtensionDir().DIRECTORY_SEPARATOR.$this->pkg->getName().'.so');
-        
-        if(!$res){
+    public function strip($php)
+    {
+        $res = $this->runCommand('strip --strip-all '.$php->getExtensionDir().\DIRECTORY_SEPARATOR.$this->pkg->getName().'.so');
+
+        if (!$res) {
             throw new \Exception('strip failed');
         }
     }
 
-    public function deleteUselessFile($php){
-        if(!$prefix = $php->getPrefix()){
-             return;
+    public function deleteUselessFile($php)
+    {
+        if (!$prefix = $php->getPrefix()) {
+            return;
         }
 
         $this->runCommand('rm -rf '.$prefix.'/lib/php/test/'.$this->pkg);
@@ -153,7 +154,7 @@ class Unix extends Abstracts\Package\Build implements Interfaces\Package\Build
     public function getInfo()
     {
         /* XXX implementat it */
-        return array();
+        return [];
     }
 }
 

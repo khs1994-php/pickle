@@ -1,8 +1,7 @@
 <?php
 
 /**
- * Pickle
- *
+ * Pickle.
  *
  * @license
  *
@@ -36,14 +35,14 @@
 
 namespace Pickle\Console\Command;
 
+use Pickle\Base\Interfaces;
+use Pickle\Base\Util;
+use Pickle\Package\Command\Validate;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
-use Pickle\Base\Interfaces;
-use Pickle\Package\Command\Validate;
-use Pickle\Base\Util;
 
 class ValidateCommand extends Command
 {

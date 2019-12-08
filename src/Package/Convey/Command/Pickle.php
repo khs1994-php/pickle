@@ -1,8 +1,7 @@
 <?php
 
 /**
- * Pickle
- *
+ * Pickle.
  *
  * @license
  *
@@ -36,13 +35,13 @@
 
 namespace Pickle\Package\Convey\Command;
 
-use Pickle\Config;
+use Composer\Downloader\GitDownloader;
+use Composer\Package\LinkConstraint\VersionConstraint;
+use Composer\Package\Version\VersionParser;
 use Pickle\Base\Abstracts;
 use Pickle\Base\Interfaces;
+use Pickle\Config;
 use Pickle\Package;
-use Composer\Downloader\GitDownloader;
-use Composer\Package\Version\VersionParser;
-use Composer\Package\LinkConstraint\VersionConstraint;
 
 class Pickle extends Abstracts\Package\Convey\Command implements Interfaces\Package\Convey\Command
 {
@@ -55,8 +54,8 @@ class Pickle extends Abstracts\Package\Convey\Command implements Interfaces\Pack
     {
         $extensionJson = @file_get_contents('http://localhost:8080/json/'.$this->name.'.json');
         if (!$extensionJson) {
-            $status = isset($http_response_header[0]) ? $http_response_header[0] : "";
-            if (strpos($status, '404') !== false) {
+            $status = isset($http_response_header[0]) ? $http_response_header[0] : '';
+            if (false !== strpos($status, '404')) {
                 throw new \Exception("cannot find $this->name");
             } else {
                 if ($status) {
@@ -81,9 +80,9 @@ class Pickle extends Abstracts\Package\Convey\Command implements Interfaces\Pack
         $extension = $this->fetchPackageJson();
 
         $versionParser = new VersionParser();
-        if ($matches['version'] == '') {
+        if ('' == $matches['version']) {
             $versions = array_keys($extension['packages'][$this->name]);
-            if (count($versions) > 1) {
+            if (\count($versions) > 1) {
                 $versionToUse = $versions[1];
             } else {
                 $versionToUse = $versions[0];

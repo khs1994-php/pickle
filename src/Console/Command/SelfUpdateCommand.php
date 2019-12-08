@@ -2,11 +2,11 @@
 
 namespace Pickle\Console\Command;
 
+use Humbug\SelfUpdate\Updater;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
-use Humbug\SelfUpdate\Updater;
 
 class SelfUpdateCommand extends Command
 {
@@ -37,10 +37,10 @@ class SelfUpdateCommand extends Command
             $updater->getStrategy()->setStability('unstable');
         }
 
-        if ($updater->update() === false) {
+        if (false === $updater->update()) {
             $output->writeln('<info>Already up-to-date.</info>');
         } else {
-            $output->writeln('<info>' . $updater->getLocalPharFileBasename() . ' has been updated!</info>');
+            $output->writeln('<info>'.$updater->getLocalPharFileBasename().' has been updated!</info>');
         }
     }
 }

@@ -1,8 +1,7 @@
 <?php
 
 /**
- * Pickle
- *
+ * Pickle.
  *
  * @license
  *
@@ -36,11 +35,11 @@
 
 namespace Pickle\Package\PHP\Command;
 
+use Composer\Package\Version\VersionParser;
 use Pickle\Base\Interfaces;
 use Pickle\Package;
 use Pickle\Package\PHP\Util\PackageXml;
 use Pickle\Package\Util\Header;
-use Composer\Package\Version\VersionParser;
 
 class Release implements Interfaces\Package\Release
 {
@@ -78,8 +77,8 @@ class Release implements Interfaces\Package\Release
         $jsonLoader = new Package\Util\JSON\Loader(new Package\Util\Loader());
         $package = null;
 
-        if (file_exists($path.DIRECTORY_SEPARATOR.'composer.json')) {
-            $package = $jsonLoader->load($path.DIRECTORY_SEPARATOR.'composer.json');
+        if (file_exists($path.\DIRECTORY_SEPARATOR.'composer.json')) {
+            $package = $jsonLoader->load($path.\DIRECTORY_SEPARATOR.'composer.json');
         }
 
         if (null === $package && $this->noConvert) {
@@ -121,7 +120,7 @@ class Release implements Interfaces\Package\Release
     /**
      * Create package.
      */
-    public function create(array $args = array())
+    public function create(array $args = [])
     {
         $archBasename = $this->pkg->getSimpleName().'-'.$this->pkg->getPrettyVersion();
 

@@ -1,8 +1,7 @@
 <?php
 
 /**
- * Pickle
- *
+ * Pickle.
  *
  * @license
  *
@@ -37,7 +36,6 @@
 namespace Pickle\Package\PHP\Util\XML;
 
 use Composer\Package\Loader\LoaderInterface;
-use Pickle\Package\PHP;
 use Pickle\Package\Util\Header;
 
 class Loader
@@ -86,8 +84,8 @@ class Loader
             throw new \Exception('not a PHP extension package.xml, providesextension tag missing');
         }
 
-        $authors = array();
-        foreach (array($xml->lead, $xml->developer, $xml->contributor, $xml->helper) as $devs) {
+        $authors = [];
+        foreach ([$xml->lead, $xml->developer, $xml->contributor, $xml->helper] as $devs) {
             foreach ($devs as $dev) {
                 $authors[] = $dev;
             }
@@ -134,10 +132,10 @@ class Loader
         if (!$ret_pkg) {
             throw new \Exception("Package from '$path' failed to load.");
         }
-        $ret_pkg->setRootDir(dirname($path));
+        $ret_pkg->setRootDir(\dirname($path));
 
         $src_ver = new Header\Version($ret_pkg);
-        
+
         // class 与 字符串 对比 相当于 class->__tostring() == 字符串
         if ($src_ver != $ret_pkg->getPrettyVersion()) {
             $exception = "Version mismatch - '".$src_ver."' != '".$ret_pkg->getPrettyVersion()."' in source vs. XML";

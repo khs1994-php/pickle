@@ -1,8 +1,7 @@
 <?php
 
 /**
- * Pickle
- *
+ * Pickle.
  *
  * @license
  *
@@ -42,7 +41,7 @@ class PHP extends atoum
 {
     public function beforeTestMethod($method)
     {
-        if (defined('PHP_WINDOWS_VERSION_MAJOR') === false) {
+        if (false === \defined('PHP_WINDOWS_VERSION_MAJOR')) {
             $this->skip('Can only run on Windows');
         }
     }
@@ -51,12 +50,12 @@ class PHP extends atoum
     {
         $this->assert
             ->exception(function () {
-                new \Pickle\Engine\PHP("");
+                new \Pickle\Engine\PHP('');
             });
 
         $this->assert
             ->exception(function () {
-                new \Pickle\Engine\PHP("c:\\windows\\system32\\at.exe");
+                new \Pickle\Engine\PHP('c:\\windows\\system32\\at.exe');
             });
     }
 

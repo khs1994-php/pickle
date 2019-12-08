@@ -1,8 +1,7 @@
 <?php
 
 /**
- * Pickle
- *
+ * Pickle.
  *
  * @license
  *
@@ -48,7 +47,7 @@ interface Build
 
     public function make();
 
-    public function install($php,$strip=false,$cleanup=false);
+    public function install($php, $strip = false, $cleanup = false);
 
     public function getInfo();
 }

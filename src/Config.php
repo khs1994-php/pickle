@@ -10,12 +10,12 @@ class Config extends Composer\Config
 
     public function __construct($useEnvironment = true, $baseDir = null)
     {
-        if ($useEnvironment === true) {
+        if (true === $useEnvironment) {
             $baseDir = $baseDir ?: (getenv('PICKLE_BASE_DIR') ?: null);
         }
 
         $baseDir = $baseDir ?: (getenv('HOME') ?: sys_get_temp_dir());
-        $baseDir = rtrim($baseDir, DIRECTORY_SEPARATOR) . DIRECTORY_SEPARATOR . self::DEFAULT_BASE_DIRNAME;
+        $baseDir = rtrim($baseDir, \DIRECTORY_SEPARATOR).\DIRECTORY_SEPARATOR.self::DEFAULT_BASE_DIRNAME;
 
         parent::__construct($useEnvironment, $baseDir);
     }

@@ -1,8 +1,7 @@
 <?php
 
 /**
- * Pickle
- *
+ * Pickle.
  *
  * @license
  *
@@ -37,79 +36,79 @@
 namespace Pickle\tests\units\Package\Convey\Command;
 
 use atoum;
-use Pickle\tests;
 use Pickle\Package\Convey\Command;
+use Pickle\tests;
 
 class Type extends atoum
 {
     public function test_determine_pickle()
     {
         $this
-            ->string(Command\Type::determine("vendor/hello", true))
+            ->string(Command\Type::determine('vendor/hello', true))
                 ->isIdenticalTo(Command\Type::PICKLE);
     }
 
     public function test_determine_pecl()
     {
         $this
-            ->string(Command\Type::determine("hello", true))
+            ->string(Command\Type::determine('hello', true))
                 ->isIdenticalTo(Command\Type::PECL)
-            ->string(Command\Type::determine("hello-stable", true))
+            ->string(Command\Type::determine('hello-stable', true))
                 ->isIdenticalTo(Command\Type::PECL)
-            ->string(Command\Type::determine("hello-beta", true))
+            ->string(Command\Type::determine('hello-beta', true))
                 ->isIdenticalTo(Command\Type::PECL)
-            ->string(Command\Type::determine("hello-alpha", true))
+            ->string(Command\Type::determine('hello-alpha', true))
                 ->isIdenticalTo(Command\Type::PECL)
-            ->string(Command\Type::determine("hello-1.2.3", true))
+            ->string(Command\Type::determine('hello-1.2.3', true))
                 ->isIdenticalTo(Command\Type::PECL)
-            ->string(Command\Type::determine("hello-1.2", true))
+            ->string(Command\Type::determine('hello-1.2', true))
                 ->isIdenticalTo(Command\Type::PECL)
-            ->string(Command\Type::determine("hello@1.2.3", true))
+            ->string(Command\Type::determine('hello@1.2.3', true))
                 ->isIdenticalTo(Command\Type::PECL)
-            ->string(Command\Type::determine("hello@1.2", true))
+            ->string(Command\Type::determine('hello@1.2', true))
                 ->isIdenticalTo(Command\Type::PECL)
 
-            ->string(Command\Type::determine("pecl/hello", true))
+            ->string(Command\Type::determine('pecl/hello', true))
                 ->isIdenticalTo(Command\Type::PECL)
-            ->string(Command\Type::determine("pecl/hello-stable", true))
+            ->string(Command\Type::determine('pecl/hello-stable', true))
                 ->isIdenticalTo(Command\Type::PECL)
-            ->string(Command\Type::determine("pecl/hello-beta", true))
+            ->string(Command\Type::determine('pecl/hello-beta', true))
                 ->isIdenticalTo(Command\Type::PECL)
-            ->string(Command\Type::determine("pecl/hello-alpha", true))
+            ->string(Command\Type::determine('pecl/hello-alpha', true))
                 ->isIdenticalTo(Command\Type::PECL)
-            ->string(Command\Type::determine("pecl/hello-1.2.3", true))
+            ->string(Command\Type::determine('pecl/hello-1.2.3', true))
                 ->isIdenticalTo(Command\Type::PECL)
-            ->string(Command\Type::determine("pecl/hello-1.2", true))
+            ->string(Command\Type::determine('pecl/hello-1.2', true))
                 ->isIdenticalTo(Command\Type::PECL)
-            ->string(Command\Type::determine("pecl/hello@1.2.3", true))
+            ->string(Command\Type::determine('pecl/hello@1.2.3', true))
                 ->isIdenticalTo(Command\Type::PECL)
-            ->string(Command\Type::determine("pecl/hello@1.2", true))
+            ->string(Command\Type::determine('pecl/hello@1.2', true))
                 ->isIdenticalTo(Command\Type::PECL)
                 ;
 
-            /* XXX fix version tests */
+        /* XXX fix version tests */
     }
 
     public function test_determine_git()
     {
         $this
-            ->string(Command\Type::determine("https://github.com/weltling/phurple.git", true))
+            ->string(Command\Type::determine('https://github.com/weltling/phurple.git', true))
                 ->isIdenticalTo(Command\Type::GIT)
-            ->string(Command\Type::determine("git@github.com:weltling/phurple.git", true))
+            ->string(Command\Type::determine('git@github.com:weltling/phurple.git', true))
                 ->isIdenticalTo(Command\Type::GIT)
-            ->string(Command\Type::determine("https://github.com/mgdm/Mosquitto-PHP.git", true))
+            ->string(Command\Type::determine('https://github.com/mgdm/Mosquitto-PHP.git', true))
                 ->isIdenticalTo(Command\Type::GIT)
-            ->string(Command\Type::determine("ssh://user@host.xz:port/path/to/repo.git", true))
+            ->string(Command\Type::determine('ssh://user@host.xz:port/path/to/repo.git', true))
                 ->isIdenticalTo(Command\Type::GIT)
-            ->string(Command\Type::determine("rsync://host.xz/path/to/repo.git", true))
+            ->string(Command\Type::determine('rsync://host.xz/path/to/repo.git', true))
                 ->isIdenticalTo(Command\Type::GIT)
-            ->string(Command\Type::determine("file:///path/to/repo.git", true))
+            ->string(Command\Type::determine('file:///path/to/repo.git', true))
                 ->isIdenticalTo(Command\Type::GIT)
-            ->string(Command\Type::determine("file:///path/to/repo.git#somebranch", true))
+            ->string(Command\Type::determine('file:///path/to/repo.git#somebranch', true))
                 ->isIdenticalTo(Command\Type::GIT)
-            ->string(Command\Type::determine("file:///path/to/repo.git#some-branch", true))
+            ->string(Command\Type::determine('file:///path/to/repo.git#some-branch', true))
                 ->isIdenticalTo(Command\Type::GIT)
-            ->string(Command\Type::determine("file:///path/to/repo.git#some_branch123", true))
+            ->string(Command\Type::determine('file:///path/to/repo.git#some_branch123', true))
                 ->isIdenticalTo(Command\Type::GIT)
                 ;
     }
@@ -117,11 +116,11 @@ class Type extends atoum
     public function test_determine_tgz()
     {
         $this
-            ->string(Command\Type::determine("https://github.com/DomBlack/php-scrypt/archive/v1.2.tar.gz", true))
+            ->string(Command\Type::determine('https://github.com/DomBlack/php-scrypt/archive/v1.2.tar.gz', true))
                 ->isIdenticalTo(Command\Type::TGZ)
-            ->string(Command\Type::determine("http://pecl.php.net/get/sync-1.0.1.tgz", true))
+            ->string(Command\Type::determine('http://pecl.php.net/get/sync-1.0.1.tgz', true))
                 ->isIdenticalTo(Command\Type::TGZ)
-            ->string(Command\Type::determine("some_ext-1.2.3a.tgz", false))
+            ->string(Command\Type::determine('some_ext-1.2.3a.tgz', false))
                 ->isIdenticalTo(Command\Type::TGZ);
     }
 

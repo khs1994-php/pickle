@@ -1,8 +1,7 @@
 <?php
 
 /**
- * Pickle
- *
+ * Pickle.
  *
  * @license
  *
@@ -44,7 +43,7 @@ class Loader extends atoum
     {
         $this
             ->given(
-                $path = FIXTURES_DIR . '/package/package.xml',
+                $path = FIXTURES_DIR.'/package/package.xml',
                 $loader = new \mock\Composer\Package\Loader\LoaderInterface()
             )
             ->if($this->newTestedInstance($loader))
@@ -57,14 +56,14 @@ class Loader extends atoum
                 ->exception(function () use ($path) {
                     $this->testedInstance->load($path);
                 })
-                    ->hasMessage('File not found: ' . $path)
-            ->given($path = FIXTURES_DIR . '/package-no-extension/package.xml')
+                    ->hasMessage('File not found: '.$path)
+            ->given($path = FIXTURES_DIR.'/package-no-extension/package.xml')
             ->then
                 ->exception(function () use ($path) {
                     $this->testedInstance->load($path);
                 })
                     ->hasMessage('Only extension packages are supported')
-            ->given($path = FIXTURES_DIR . '/package-pre-2.0/package.xml')
+            ->given($path = FIXTURES_DIR.'/package-pre-2.0/package.xml')
             ->then
                 ->exception(function () use ($path) {
                     $this->testedInstance->load($path);
@@ -77,7 +76,7 @@ class Loader extends atoum
     {
         $this
             ->given(
-                $path = FIXTURES_DIR . '/package/package.xml',
+                $path = FIXTURES_DIR.'/package/package.xml',
                 $loader = new \mock\Composer\Package\Loader\LoaderInterface(),
                 $this->function->simplexml_load_file = false
             )
@@ -86,7 +85,7 @@ class Loader extends atoum
                 ->exception(function () use ($path) {
                     $this->testedInstance->load($path);
                 })
-                    ->hasMessage('Failed to read ' . $path)
+                    ->hasMessage('Failed to read '.$path)
         ;
     }
 }

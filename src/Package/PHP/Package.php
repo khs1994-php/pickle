@@ -1,8 +1,7 @@
 <?php
 
 /**
- * Pickle
- *
+ * Pickle.
  *
  * @license
  *
@@ -64,7 +63,7 @@ class Package extends Abstracts\Package implements \Pickle\Base\Interfaces\Packa
     public function getSourceDir()
     {
         $path = $this->getRootDir();
-        $release = $path.DIRECTORY_SEPARATOR.$this->getPrettyName().'-'.$this->getPrettyVersion();
+        $release = $path.\DIRECTORY_SEPARATOR.$this->getPrettyName().'-'.$this->getPrettyVersion();
 
         if (is_dir($release)) {
             $path = $release;
@@ -104,7 +103,7 @@ class Package extends Abstracts\Package implements \Pickle\Base\Interfaces\Packa
     {
         $options = [];
 
-        if (defined('PHP_WINDOWS_VERSION_MAJOR')) {
+        if (\defined('PHP_WINDOWS_VERSION_MAJOR')) {
             $config_file = $this->getSourceDir().'/config.w32';
 
             if (!file_exists($config_file)) {
@@ -203,7 +202,7 @@ class Package extends Abstracts\Package implements \Pickle\Base\Interfaces\Packa
             list($name, $desc) = explode(',', $option);
 
             $desc = preg_replace('/\s+/', ' ', trim($desc));
-            $desc = trim(substr($desc, 1, strlen($desc) - 2));
+            $desc = trim(substr($desc, 1, \strlen($desc) - 2));
             $s_a = strpos($desc, ' ');
             $desc = trim(substr($desc, $s_a));
 
@@ -240,10 +239,10 @@ class Package extends Abstracts\Package implements \Pickle\Base\Interfaces\Packa
             list($name, $desc) = explode(',', $option);
 
             /* Description can be part of the 3rd argument */
-            if (empty($desc) || $desc === '[]') {
+            if (empty($desc) || '[]' === $desc) {
                 list($name, , $desc) = explode(',', $option);
                 $desc = preg_replace('/\s+/', ' ', trim($desc));
-                $desc = trim(substr($desc, 1, strlen($desc) - 2));
+                $desc = trim(substr($desc, 1, \strlen($desc) - 2));
                 $desc = trim(str_replace(['[', ']'], ['', ''], $desc));
                 $s_a = strpos($desc, ' ');
                 $desc = trim(substr($desc, $s_a));
@@ -283,7 +282,7 @@ class Package extends Abstracts\Package implements \Pickle\Base\Interfaces\Packa
 
     public function getVersionFromHeader()
     {
-        $headers = glob($this->path.DIRECTORY_SEPARATOR.'*.h');
+        $headers = glob($this->path.\DIRECTORY_SEPARATOR.'*.h');
         $version_define = 'PHP_'.strtoupper($this->getSimpleName()).'_VERSION';
         foreach ($headers as $header) {
             $contents = @file_get_contents($header);
@@ -291,7 +290,7 @@ class Package extends Abstracts\Package implements \Pickle\Base\Interfaces\Packa
                 throw new \Exception("Cannot read header <$header>");
             }
             $pos_version = strpos($contents, $version_define);
-            if ($pos_version !== false) {
+            if (false !== $pos_version) {
                 $nl = strpos($contents, "\n", $pos_version);
                 $version_line = trim(substr($contents, $pos_version, $nl - $pos_version));
                 list($version_define, $version) = explode(' ', $version_line);
@@ -308,12 +307,12 @@ class Package extends Abstracts\Package implements \Pickle\Base\Interfaces\Packa
 
     protected function extConfigIsIn($path)
     {
-        if (defined('PHP_WINDOWS_VERSION_MAJOR') !== false) {
-            return file_exists(realpath($path).DIRECTORY_SEPARATOR.'config.w32');
+        if (false !== \defined('PHP_WINDOWS_VERSION_MAJOR')) {
+            return file_exists(realpath($path).\DIRECTORY_SEPARATOR.'config.w32');
         } else {
             $r = glob("$path/config*.m4");
 
-            return is_array($r) && !empty($r);
+            return \is_array($r) && !empty($r);
         }
     }
 

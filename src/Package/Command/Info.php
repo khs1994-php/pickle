@@ -1,8 +1,7 @@
 <?php
 
 /**
- * Pickle
- *
+ * Pickle.
  *
  * @license
  *
@@ -38,7 +37,6 @@ namespace Pickle\Package\Command;
 
 use Pickle\Engine;
 use Pickle\Package\PHP;
-use Pickle\Package\HHVM;
 
 class Info
 {
@@ -52,7 +50,6 @@ class Info
 
             case 'hhvm':
                 throw new \Exception("Not implemented for engine '{$engine->getName()}'");
-
             default:
                 throw new \Exception("Unsupported engine '{$engine->getName()}'. Implement it!");
         }

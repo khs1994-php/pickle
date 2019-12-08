@@ -1,8 +1,7 @@
 <?php
 
 /**
- * Pickle
- *
+ * Pickle.
  *
  * @license
  *
@@ -41,7 +40,7 @@ use Pickle\Base\Interfaces;
 class Ini
 {
     protected static $instance = null;
-    
+
     /**
      * @return PHP\Ini;
      */

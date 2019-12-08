@@ -1,8 +1,7 @@
 <?php
 
 /**
- * Pickle
- *
+ * Pickle.
  *
  * @license
  *
@@ -55,7 +54,7 @@ class Ini
         $this->engine = $php;
         $this->path = $php->getIniPath();
 
-        if(!$php->isWindows){
+        if (!$php->isWindows) {
             return;
         }
 

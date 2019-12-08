@@ -1,8 +1,7 @@
 <?php
 
 /**
- * Pickle
- *
+ * Pickle.
  *
  * @license
  *
@@ -36,8 +35,8 @@
 
 namespace Pickle\Package\Convey\Command;
 
-use Pickle\Base\Interfaces;
 use Pickle\Base\Abstracts;
+use Pickle\Base\Interfaces;
 
 class SrcDir extends Abstracts\Package\Convey\Command implements Interfaces\Package\Convey\Command
 {

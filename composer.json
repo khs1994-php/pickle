@@ -46,7 +46,8 @@
     },
     "bin": ["bin/pickle"],
     "scripts": {
-        "build": "box build"
+        "build": "box build",
+        "fmt": "php-cs-fixer fix"
     },
     "conflict": {
         "friendsofphp/pickle": "*"

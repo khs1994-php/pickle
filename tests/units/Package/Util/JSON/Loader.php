@@ -1,8 +1,7 @@
 <?php
 
 /**
- * Pickle
- *
+ * Pickle.
  *
  * @license
  *
@@ -44,7 +43,7 @@ class Loader extends atoum
     {
         $this
             ->given(
-                $path = FIXTURES_DIR . '/package/composer.json',
+                $path = FIXTURES_DIR.'/package/composer.json',
                 $loader = new \mock\Composer\Package\Loader\LoaderInterface(),
                 $this->calling($loader)->load = $package = new \mock\Composer\Package\PackageInterface()
             )
@@ -56,7 +55,7 @@ class Loader extends atoum
                 ->exception(function () use ($path) {
                     $this->testedInstance->load($path);
                 })
-                    ->hasMessage('File not found: ' . $path)
+                    ->hasMessage('File not found: '.$path)
         ;
     }
 
@@ -64,7 +63,7 @@ class Loader extends atoum
     {
         $this
             ->given(
-                $path = FIXTURES_DIR . '/package/composer.json',
+                $path = FIXTURES_DIR.'/package/composer.json',
                 $loader = new \mock\Composer\Package\Loader\LoaderInterface(),
                 $this->function->json_decode = false
             )
@@ -73,7 +72,7 @@ class Loader extends atoum
                 ->exception(function () use ($path) {
                     $this->testedInstance->load($path);
                 })
-                    ->hasMessage('Failed to read ' . $path)
+                    ->hasMessage('Failed to read '.$path)
                 ->mock($loader)
                     ->call('load')->never
         ;

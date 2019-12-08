@@ -1,8 +1,7 @@
 <?php
 
 /**
- * Pickle
- *
+ * Pickle.
  *
  * @license
  *
@@ -36,12 +35,11 @@
 
 namespace Pickle\Package\PHP\Convey\Command;
 
-use Pickle\Config;
-use Pickle\Base\Interfaces;
 use Pickle\Base\Abstracts;
-use Pickle\Package\PHP;
-use Pickle\Engine;
+use Pickle\Base\Interfaces;
+use Pickle\Config;
 use Pickle\Downloader\PECLDownloader;
+use Pickle\Engine;
 use Pickle\Package\Convey\Command\Type;
 
 class Pecl extends Abstracts\Package\Convey\Command implements Interfaces\Package\Convey\Command

@@ -1,8 +1,7 @@
 <?php
 
 /**
- * Pickle
- *
+ * Pickle.
  *
  * @license
  *
@@ -36,13 +35,13 @@
 
 namespace Pickle\Console\Command;
 
+use Pickle\Base\Util;
+use Pickle\Package\Command\Convert;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
-use Pickle\Package\Command\Convert;
-use Pickle\Base\Util;
 
 class ConvertCommand extends Command
 {

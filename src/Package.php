@@ -1,8 +1,7 @@
 <?php
 
 /**
- * Pickle
- *
+ * Pickle.
  *
  * @license
  *
@@ -36,8 +35,8 @@
 
 namespace Pickle;
 
-use Pickle\Package\PHP;
 use Pickle\Package\HHVM;
+use Pickle\Package\PHP;
 
 class Package
 {
@@ -45,7 +44,7 @@ class Package
 
     protected static function deliverFresh($force)
     {
-        if ($force && self::$instance || is_null(self::$instance)) {
+        if ($force && self::$instance || null === self::$instance) {
             /* XXX does this leak the previous instance? */
             self::$instance = null;
 

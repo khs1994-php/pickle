@@ -1,8 +1,7 @@
 <?php
 
 /**
- * Pickle
- *
+ * Pickle.
  *
  * @license
  *
@@ -36,12 +35,12 @@
 
 namespace Pickle\Engine\PHP;
 
-use Pickle\Base\Interfaces;
 use Pickle\Base\Abstracts;
+use Pickle\Base\Interfaces;
 
 class Ini extends Abstracts\Engine\Ini implements Interfaces\Engine\Ini
 {
-    private $ZEND_EXTENSION=[
+    private $ZEND_EXTENSION = [
       'xdebug',
       'php_xdebug.dll',
       'xdebug.so',
@@ -63,7 +62,7 @@ class Ini extends Abstracts\Engine\Ini implements Interfaces\Engine\Ini
      *
      * @return string
      */
-    protected function rebuildPickleParts($pickleSection, array $dlls_add, array $dlls_del = array())
+    protected function rebuildPickleParts($pickleSection, array $dlls_add, array $dlls_del = [])
     {
         $lines = explode("\n", $pickleSection);
         $new = [];
@@ -83,11 +82,11 @@ class Ini extends Abstracts\Engine\Ini implements Interfaces\Engine\Ini
             }
             list(, $dllname) = explode('=', $l);
 
-            if (in_array(trim($dllname), $dlls_add)) {
+            if (\in_array(trim($dllname), $dlls_add)) {
                 /* don't create a duplicated item */
                 continue;
             }
-            if (in_array(trim($dllname), $dlls_del)) {
+            if (\in_array(trim($dllname), $dlls_del)) {
                 /* don't restore as it should be deleted */
                 continue;
             }
@@ -104,13 +103,13 @@ class Ini extends Abstracts\Engine\Ini implements Interfaces\Engine\Ini
         $posHeader = strpos($this->raw, self::PICKLE_HEADER);
         if (false === $posHeader) {
             /* no pickle section here yet */
-            $this->pickleHeaderStartPos = strlen($this->raw);
+            $this->pickleHeaderStartPos = \strlen($this->raw);
 
             return;
         }
 
         $this->pickleHeaderStartPos = $posHeader;
-        $this->pickleHeaderEndPos = $this->pickleHeaderStartPos + strlen(self::PICKLE_HEADER);
+        $this->pickleHeaderEndPos = $this->pickleHeaderStartPos + \strlen(self::PICKLE_HEADER);
 
         $posFooter = strpos($this->raw, self::PICKLE_FOOTER);
         if (false === $posFooter) {
@@ -132,56 +131,57 @@ class Ini extends Abstracts\Engine\Ini implements Interfaces\Engine\Ini
             $this->pickleFooterStartPos = strpos($this->raw, "\n", $this->pickleFooterStartPos);
         } else {
             $this->pickleFooterStartPos = $posFooter;
-            $this->pickleFooterEndPos = $this->pickleFooterStartPos + strlen(self::PICKLE_FOOTER);
+            $this->pickleFooterEndPos = $this->pickleFooterStartPos + \strlen(self::PICKLE_FOOTER);
         }
     }
 
     /**
      * @param ext xdebug xdebug.so
      */
-    protected function isZendExtension($ext){
-        if(false !== strpos($ext,'.so')){
-            $ext = substr($ext,0,-3);
+    protected function isZendExtension($ext)
+    {
+        if (false !== strpos($ext, '.so')) {
+            $ext = substr($ext, 0, -3);
         }
 
-        return \in_array($ext,['xdebug','opcache']);
+        return \in_array($ext, ['xdebug', 'opcache']);
     }
 
     /**
      * @param exts 'curl.so'
      */
-    public function updatePickleSectionOnLinux(array $exts_add,$phpIniDir,$no_write){
-        if(!$phpIniDir){
-
+    public function updatePickleSectionOnLinux(array $exts_add, $phpIniDir, $no_write)
+    {
+        if (!$phpIniDir) {
             return;
         }
 
         $packageName = $exts_add[0];
 
-        if($this->ge72()){
-            if($pos = \strpos($packageName,'.so')){
-                $pos !== false && $packageName = \substr($packageName,0,$pos);
-            };
+        if ($this->ge72()) {
+            if ($pos = strpos($packageName, '.so')) {
+                false !== $pos && $packageName = substr($packageName, 0, $pos);
+            }
         }
 
-        $phpIniDirContent = ($this->isZendExtension($packageName) ? "zend_" : "")
+        $phpIniDirContent = ($this->isZendExtension($packageName) ? 'zend_' : '')
             .'extension='.$packageName;
 
         $packageRealName = $packageName;
-        if($pos = \strpos($packageName,'.so')){
-            $pos !== false && $packageRealName = \substr($packageName,0,$pos);
-        };
-
-        $phpIniDirFile = $phpIniDir.DIRECTORY_SEPARATOR.'php-ext-'.$packageRealName.'.ini';
-
-        if($no_write){
-           $phpIniDirFile .= '.default';
+        if ($pos = strpos($packageName, '.so')) {
+            false !== $pos && $packageRealName = substr($packageName, 0, $pos);
         }
 
-        \file_put_contents($phpIniDirFile,$phpIniDirContent);
+        $phpIniDirFile = $phpIniDir.\DIRECTORY_SEPARATOR.'php-ext-'.$packageRealName.'.ini';
+
+        if ($no_write) {
+            $phpIniDirFile .= '.default';
+        }
+
+        file_put_contents($phpIniDirFile, $phpIniDirContent);
     }
 
-    public function updatePickleSection(array $dlls_add, array $dlls_del = array())
+    public function updatePickleSection(array $dlls_add, array $dlls_del = [])
     {
         $before = '';
         $after = '';
@@ -214,34 +214,34 @@ class Ini extends Abstracts\Engine\Ini implements Interfaces\Engine\Ini
         // 7.1 extension=php_bz2.dll
         //     extension=msql.so
 
-        if($this->ge72()){
-            if($pos = \strpos($dll,'.dll')){
-                $pos !== false && $dll = \substr($dll,0,$pos);
-            };
+        if ($this->ge72()) {
+            if ($pos = strpos($dll, '.dll')) {
+                false !== $pos && $dll = substr($dll, 0, $pos);
+            }
 
-            if($pos = \strpos($dll,'.so')){
-                $pos !== false && $dll = \substr($dll,0,$pos);
-            };
+            if ($pos = strpos($dll, '.so')) {
+                false !== $pos && $dll = substr($dll, 0, $pos);
+            }
 
-            if(\strpos($dll,'php_') === 0){
-                $dll = \substr($dll,4);
+            if (0 === strpos($dll, 'php_')) {
+                $dll = substr($dll, 4);
             }
         }
 
-        if(\in_array($dll,$this->ZEND_EXTENSION)){
-
+        if (\in_array($dll, $this->ZEND_EXTENSION)) {
             return 'zend_extension='.$dll;
         }
 
         return 'extension='.$dll;
     }
 
-    protected function ge72(){
+    protected function ge72()
+    {
         $engine = $this->engine;
         $major = $engine->getMajorVersion();
         $minor = $engine->getMinorVersion();
 
-        if(($major >= 7 && $minor >= 2) or $major > 7){
+        if (($major >= 7 && $minor >= 2) or $major > 7) {
             return true;
         }
 

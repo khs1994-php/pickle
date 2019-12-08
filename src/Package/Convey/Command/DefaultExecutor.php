@@ -1,8 +1,7 @@
 <?php
 
 /**
- * Pickle
- *
+ * Pickle.
  *
  * @license
  *
@@ -37,9 +36,9 @@
 namespace Pickle\Package\Convey\Command;
 
 use Pickle\Base\Interfaces;
-use Pickle\Package\PHP;
-use Pickle\Package\HHVM;
 use Pickle\Engine;
+use Pickle\Package\HHVM;
+use Pickle\Package\PHP;
 
 class DefaultExecutor implements Interfaces\Package\Convey\DefaultExecutor
 {

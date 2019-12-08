@@ -1,8 +1,7 @@
 <?php
 
 /**
- * Pickle
- *
+ * Pickle.
  *
  * @license
  *
@@ -94,8 +93,8 @@ class ConvertChangeLog
                      "\n";
         }
 
-        if (file_put_contents(dirname($this->path).DIRECTORY_SEPARATOR.'RELEASES', $contents) === false) {
-            throw new \RuntimeException('cannot save RELEASE file in <'.dirname($this->path).DIRECTORY_SEPARATOR.'RELEASES>');
+        if (false === file_put_contents(\dirname($this->path).\DIRECTORY_SEPARATOR.'RELEASES', $contents)) {
+            throw new \RuntimeException('cannot save RELEASE file in <'.\dirname($this->path).\DIRECTORY_SEPARATOR.'RELEASES>');
         }
     }
 }

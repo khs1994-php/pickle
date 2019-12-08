@@ -1,8 +1,7 @@
 <?php
 
 /**
- * Pickle
- *
+ * Pickle.
  *
  * @license
  *
@@ -36,8 +35,8 @@
 
 namespace Pickle\Package\PHP\Command\Build;
 
-use Pickle\Base\Interfaces;
 use Pickle\Base\Abstracts;
+use Pickle\Base\Interfaces;
 use Pickle\Engine;
 
 class Windows extends Abstracts\Package\Build implements Interfaces\Package\Build
@@ -67,7 +66,7 @@ class Windows extends Abstracts\Package\Build implements Interfaces\Package\Buil
             if (!is_readable($srcfile)) {
                 continue;
             }
-            if ($file != '.' && $file != '..') {
+            if ('.' != $file && '..' != $file) {
                 if (is_dir($srcfile)) {
                     if (!is_dir($destfile)) {
                         mkdir($destfile);
@@ -103,12 +102,12 @@ class Windows extends Abstracts\Package\Build implements Interfaces\Package\Buil
                 $decision = false == $option->input ? 'enable' : 'disable';
             }
 
-            if (!is_null($decision)) {
+            if (null !== $decision) {
                 $configureOptions .= ' --'.$decision.'-'.$name;
             }
         }
 
-        $php_prefix = dirname(Engine::factory()->getPath());
+        $php_prefix = \dirname(Engine::factory()->getPath());
         $configureOptions .= " --with-prefix=$php_prefix";
 
         $this->appendPkgConfigureOptions($configureOptions);
@@ -154,14 +153,14 @@ class Windows extends Abstracts\Package\Build implements Interfaces\Package\Buil
         }
     }
 
-    public function install($php,$strip= false,$cleanup=false)
+    public function install($php, $strip = false, $cleanup = false)
     {
         $backCwd = getcwd();
         chdir($this->tempDir);
 
         /* Record the produced DLL filenames. */
-        $files = (array) glob("*/*/php_*.dll");
-        $files = array_merge($files, glob("*/php_*.dll"));
+        $files = (array) glob('*/*/php_*.dll');
+        $files = array_merge($files, glob('*/php_*.dll'));
         $dlls = [];
         foreach ($files as $file) {
             $dlls[] = basename($file);
@@ -179,7 +178,7 @@ class Windows extends Abstracts\Package\Build implements Interfaces\Package\Buil
 
     public function getInfo()
     {
-        $info = array();
+        $info = [];
         $info = array_merge($info, $this->getInfoFromPhpizeLog());
         $info = array_merge($info, $this->getInfoFromConfigureLog());
 
@@ -195,11 +194,11 @@ class Windows extends Abstracts\Package\Build implements Interfaces\Package\Buil
 
     protected function getInfoFromPhpizeLog()
     {
-        $ret = array(
+        $ret = [
             'php_major' => null,
         'php_minor' => null,
         'php_patch' => null,
-        );
+        ];
 
         $tmp = $this->getLog('phpize');
         if (!preg_match(",Rebuilding configure.js[\n\r\d:]+\s+(.+)[\n\r]+,", $tmp, $m)) {
@@ -229,13 +228,13 @@ class Windows extends Abstracts\Package\Build implements Interfaces\Package\Buil
 
     protected function getInfoFromConfigureLog()
     {
-        $info = array(
+        $info = [
             'thread_safe' => null,
             'compiler' => null,
             'arch' => null,
             'version' => null,
             'name' => null,
-        );
+        ];
 
         $tmp = $this->getLog('configure');
 
@@ -247,7 +246,7 @@ class Windows extends Abstracts\Package\Build implements Interfaces\Package\Buil
         if (!preg_match(",Thread Safety\s+\|\s+([a-zA-Z]+),", $tmp, $m)) {
             throw new \Exception("Couldn't determine the build thread safety");
         }
-        $info['thread_safe'] = strtolower($m[1]) == 'yes';
+        $info['thread_safe'] = 'yes' == strtolower($m[1]);
 
         if (!preg_match(",Compiler\s+\|\s+MSVC(\d+),", $tmp, $m)) {
             throw new \Exception('Currently only MSVC is supported');

@@ -1,8 +1,7 @@
 <?php
 
 /**
- * Pickle
- *
+ * Pickle.
  *
  * @license
  *
@@ -64,7 +63,7 @@ class Type
         $versionParser = new VersionParser();
         $res = $versionParser->parseNameVersionPairs([$arg]);
         $argPrefix = substr($arg, 0, 1);
-        if ($argPrefix == '/' || $argPrefix == '.') {
+        if ('/' == $argPrefix || '.' == $argPrefix) {
             return 0;
         }
         $matches = [

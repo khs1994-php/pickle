@@ -25,7 +25,7 @@ class Config extends atoum
                 ->function('getenv')
                     ->wasCalledWithArguments('PICKLE_BASE_DIR')->once
 
-            ->given($this->function->getenv = function ($var) use (&$baseDir) { return $var === 'PICKLE_BASE_DIR' ? $baseDir = uniqid() : false; })
+            ->given($this->function->getenv = function ($var) use (&$baseDir) { return 'PICKLE_BASE_DIR' === $var ? $baseDir = uniqid() : false; })
             ->when($this->newTestedInstance(false))
             ->then
                 ->string($this->testedInstance->get('vendor-dir'))->isEqualTo($this->makePath($tmpDir, TestedClass::$defaultConfig['vendor-dir']))
@@ -38,7 +38,7 @@ class Config extends atoum
                     ->wasCalledWithArguments('PICKLE_BASE_DIR')->twice
 
             ->given($this->function->getenv = function ($var) use (&$baseDir, &$homeDir) {
-                return $var === 'PICKLE_BASE_DIR' ? $baseDir = uniqid() : $homeDir = uniqid();
+                return 'PICKLE_BASE_DIR' === $var ? $baseDir = uniqid() : $homeDir = uniqid();
             }
             )
             ->when($this->newTestedInstance(false))
@@ -68,6 +68,6 @@ class Config extends atoum
 
     private function makePath($head, $tail)
     {
-        return $head . DIRECTORY_SEPARATOR . TestedClass::DEFAULT_BASE_DIRNAME . DIRECTORY_SEPARATOR . $tail;
+        return $head.\DIRECTORY_SEPARATOR.TestedClass::DEFAULT_BASE_DIRNAME.\DIRECTORY_SEPARATOR.$tail;
     }
 }
