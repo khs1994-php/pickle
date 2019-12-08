@@ -76,7 +76,7 @@ abstract class BuildCommand extends Command
                 'with-configure-options',
                 null,
                 InputOption::VALUE_REQUIRED,
-                'path to the additional configure options, try load /tmp/EXT.configure.options'
+                'path to the additional configure options, always try load /tmp/EXT.configure.options'
             )->addOption(
                 'save-logs',
                 null,

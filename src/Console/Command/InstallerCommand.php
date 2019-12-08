@@ -83,7 +83,7 @@ class InstallerCommand extends BuildCommand
                 'source',
                 null,
                 InputOption::VALUE_NONE,
-                'use source package'
+                'use source package (build from source)'
             )
             ->addOption(
                 'save-logs',
@@ -141,7 +141,7 @@ class InstallerCommand extends BuildCommand
                 'binary',
                 null,
                 InputOption::VALUE_NONE,
-                'use binary package'
+                'use binary package (download ext binary)'
             );
         }
     }

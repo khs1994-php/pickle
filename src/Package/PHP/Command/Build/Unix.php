@@ -91,6 +91,8 @@ class Unix extends Abstracts\Package\Build implements Interfaces\Package\Build
         /* XXX check sanity */
         $configureOptions = $opts ? $opts : $this->prepareConfigOpts();
 
+        $configureOptions .= ' --enable-option-checking=fatal ';
+
         $res = $this->runCommand($this->pkg->getSourceDir().'/configure '.$configureOptions);
         chdir($backCwd);
         if (!$res) {
