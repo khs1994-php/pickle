@@ -5,3 +5,5 @@ vendor/
 pickle*.phar
 
 .php_cs.cache
+
+/*.phar

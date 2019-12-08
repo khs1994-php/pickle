@@ -25,6 +25,7 @@ before_script:
   # - wget https://scrutinizer-ci.com/ocular.phar
 
 script:
+  - php -m
   - git tag nightly -f
   # - php vendor/atoum/atoum/scripts/coverage.php --format xml --output clover.xml
   - composer install --no-dev --optimize-autoloader || composer install --no-dev --optimize-autoloader --ignore-platform-reqs
