@@ -1,0 +1,37 @@
+on:
+  - push
+  - workflow_dispatch
+
+jobs:
+  ci:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@main
+        with:
+          fetch-depth: 1
+      - run: |
+          export PATH=$(composer global config bin-dir --absolute --quiet):$PATH
+          echo 'phar.readonly = Off' | sudo tee $(php-config --ini-dir)/zz-phar.ini
+          composer global require 'kherge/box=~2.4' --prefer-source
+          git tag nightly -f
+          composer install --no-dev --optimize-autoloader \
+          || composer install --no-dev --optimize-autoloader --ignore-platform-reqs
+          composer build
+          mv pickle.phar pickle.phar.back
+          composer require nunomaduro/collision --update-no-dev || true
+          composer build || true
+          cp -a pickle.phar pickle-debug.phar || true
+          cp -a pickle.phar.back pickle.phar || true
+          chmod +x ./pickle.phar
+          php -m > 1
+          ./pickle.phar install mongodb --defaults -n -vvv
+          ./pickle.phar install yaml --defaults -n -vvv --defaults --cleanup --strip
+          ls -lah $(php-config --extension-dir)
+          php -m > 2
+          diff 1 2
+          if ! [ "${GITHUB_EVENT_NAME}" = workflow_dispatch ];then exit 0; fi
+          gh release upload nightly pickle.phar --repo khs1994-php/pickle --clobber
+          gh release upload nightly pickle-debug.phar --repo khs1994-php/pickle --clobber
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_EVENT_NAME: ${{ github.event_name }}

@@ -25,8 +25,8 @@
         "ext-dom": "*",
         "ext-openssl": "*",
         "ext-zip": "*",
-        "symfony/console": "~2.5",
-        "symfony/finder": "~2.5",
+        "symfony/console": "~4.0",
+        "symfony/finder": "~4.0",
         "justinrainbow/json-schema": "^3.0 || ^4.0 || ^5.0",
         "composer/composer": "^1.9.1",
         "padraic/phar-updater": "~1.0@dev"
@@ -36,7 +36,7 @@
         "atoum/praspel-extension": "~0.1",
         "atoum/visibility-extension": "~1.0",
         "behat/behat": "~3.0",
-        "symfony/process": "~2.5",
+        "symfony/process": "~4.0",
         "nunomaduro/collision": "^3.0"
     },
     "autoload": {
