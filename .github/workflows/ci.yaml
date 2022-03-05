@@ -10,6 +10,7 @@ jobs:
         with:
           fetch-depth: 1
       - run: |
+          set -ex
           export PATH=$(composer global config bin-dir --absolute --quiet):$PATH
           echo 'phar.readonly = Off' | sudo tee $(php-config --ini-dir)/zz-phar.ini
           composer global require 'kherge/box=~2.4' --prefer-source
@@ -18,7 +19,7 @@ jobs:
           || composer install --no-dev --optimize-autoloader --ignore-platform-reqs
           composer build
           mv pickle.phar pickle.phar.back
-          composer require nunomaduro/collision --update-no-dev || true
+          composer require nunomaduro/collision=^3.0 --update-no-dev --ignore-platform-reqs || true
           composer build || true
           cp -a pickle.phar pickle-debug.phar || true
           cp -a pickle.phar.back pickle.phar || true
