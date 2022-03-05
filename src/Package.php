@@ -40,7 +40,7 @@ use Pickle\Package\PHP;
 
 class Package
 {
-    protected static $instance = null;
+    protected static $instance;
 
     protected static function deliverFresh($force)
     {

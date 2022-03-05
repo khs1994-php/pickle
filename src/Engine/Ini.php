@@ -39,7 +39,7 @@ use Pickle\Base\Interfaces;
 
 class Ini
 {
-    protected static $instance = null;
+    protected static $instance;
 
     /**
      * @return PHP\Ini;

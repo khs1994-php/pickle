@@ -100,10 +100,10 @@ class Ini extends Abstracts\Engine\Ini implements Interfaces\Engine\Ini
 
     protected function setupPickleSectionPositions()
     {
-        $posHeader = strpos($this->raw, self::PICKLE_HEADER);
+        $posHeader = strpos($this->raw ?? '', self::PICKLE_HEADER);
         if (false === $posHeader) {
             /* no pickle section here yet */
-            $this->pickleHeaderStartPos = \strlen($this->raw);
+            $this->pickleHeaderStartPos = \strlen($this->raw ?? '');
 
             return;
         }
