@@ -55,7 +55,7 @@ class PHP extends Abstracts\Engine implements Interfaces\Engine
     private $extensionDir;
     private $hasSdk;
     private $iniDir;
-    public $isWindows = false;
+    public  $isWindows = false;
     private $prefix = '';
 
     public function __construct($phpCli = PHP_BINARY)
@@ -171,26 +171,18 @@ class PHP extends Abstracts\Engine implements Interfaces\Engine
 
     protected function getCompilerFromPhpInfo($info)
     {
-        $compiler = '';
-        // Compiler => MSVC15 (Visual C++ 2017)
-        // 7.4 Compiler => Visual C++ 2017
-        foreach ($info as $s) {
-            if (false !== strpos($s, 'Compiler')) {
-                list(, $compiler) = explode('=>', $s);
-                break;
-            }
-        }
-
         if (!$this->isWindows) {
             return 'Linux';
         }
 
-        if ($this->major >= 7 and $this->minor >= 4) {
-            $compiler = 'MSVC15 (Visual C++ 2017)';
-        }
+        $compiler = '';
 
-        if ($this->major >= 8 and $this->minor >= 0) {
-            // $compiler="MSVC15 (Visual C++ 2017)";
+        foreach ($info as $s) {
+            if (false !== strpos($s, 'PHP Extension Build')) {
+                list(, $compiler) = explode('=>', $s);
+                list(,,$compiler) = explode(',',$compiler);
+                break;
+            }
         }
 
         $compiler = trim($compiler);
@@ -242,9 +234,10 @@ class PHP extends Abstracts\Engine implements Interfaces\Engine
         $iniDir = $this->getIniDirFromPhpInfo($info);
         $compiler = trim(
         strtolower(
-            str_replace('MS', '', substr(
-                    $this->getCompilerFromPhpInfo($info), 0, 6)
-                )
+            // str_replace('MS', '', substr(
+            //         $this->getCompilerFromPhpInfo($info), 0, 6)
+            //     )
+            $this->getCompilerFromPhpInfo($info)
             )
         );
 

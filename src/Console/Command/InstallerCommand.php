@@ -49,6 +49,7 @@ use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Question\ChoiceQuestion;
 use Symfony\Component\Console\Question\ConfirmationQuestion;
+use Symfony\Component\Console\Helper\ProgressBar;
 
 class InstallerCommand extends BuildCommand
 {
@@ -164,7 +165,8 @@ class InstallerCommand extends BuildCommand
             ->render();
 
         $inst = Install::factory($path);
-        $progress = $this->getHelperSet()->get('progress');
+        $progress = new ProgressBar($output, 100);
+        // $progress = $this->getHelperSet()->get('progress');
         $inst->setProgress($progress);
         $inst->setInput($input);
         $inst->setOutput($output);

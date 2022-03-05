@@ -235,17 +235,18 @@ class DependencyLib
     {
         $output = $this->output;
         $progress = $this->progress;
+        $progress->setOverwrite(true);
 
         $ctx = stream_context_create(
             [],
             [
-                'notification' => function ($notificationCode, $severity, $message, $messageCode, $bytesTransferred, $bytesMax) use ($output, $progress) {
+                'notification' => function ($notificationCode, $severity, $message, $messageCode, $bytesTransferred, $bytesMax) use ($progress) {
                     switch ($notificationCode) {
                         case STREAM_NOTIFY_FILE_SIZE_IS:
-                            $progress->start($output, $bytesMax);
+                            $progress->start($bytesMax);
                             break;
                         case STREAM_NOTIFY_PROGRESS:
-                            $progress->setCurrent($bytesTransferred);
+                            $progress->setProgress($bytesTransferred);
                             break;
                     }
                 },
