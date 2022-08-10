@@ -44,9 +44,9 @@ class DependencyLib
 {
     use FileOps;
 
-    const DLL_MAP_URL = 'https://windows.php.net/downloads/pecl/deps/dllmapping.json';
-    const DEPLISTER_URL = 'https://windows.php.net/downloads/pecl/tools/deplister.exe';
-    const DEPS_URL = 'https://windows.php.net/downloads/pecl/deps';
+    public const DLL_MAP_URL = 'https://windows.php.net/downloads/pecl/deps/dllmapping.json';
+    public const DEPLISTER_URL = 'https://windows.php.net/downloads/pecl/tools/deplister.exe';
+    public const DEPS_URL = 'https://windows.php.net/downloads/pecl/deps';
 
     private $dllMap = null;
     private $php;
@@ -242,10 +242,10 @@ class DependencyLib
             [
                 'notification' => function ($notificationCode, $severity, $message, $messageCode, $bytesTransferred, $bytesMax) use ($progress) {
                     switch ($notificationCode) {
-                        case STREAM_NOTIFY_FILE_SIZE_IS:
+                        case \STREAM_NOTIFY_FILE_SIZE_IS:
                             $progress->start($bytesMax);
                             break;
-                        case STREAM_NOTIFY_PROGRESS:
+                        case \STREAM_NOTIFY_PROGRESS:
                             $progress->setProgress($bytesTransferred);
                             break;
                     }

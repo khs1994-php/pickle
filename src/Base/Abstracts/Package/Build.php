@@ -84,7 +84,7 @@ abstract class Build
         return implode("\n", $ret);
     }
 
-    protected function prepareSaveLog($path, &$def_fl)
+    protected function prepareSaveLog($path, & $def_fl)
     {
         if ($path && !is_dir($path)) {
             if (!mkdir($path)) {
@@ -98,7 +98,7 @@ abstract class Build
         }
     }
 
-    protected function getLogFilename($path, $log_item, $def_fl, array &$logs)
+    protected function getLogFilename($path, $log_item, $def_fl, array & $logs)
     {
         $is_hint = (isset($log_item['hint']) && !empty($log_item['hint']));
         $fname = $is_hint ? $path.\DIRECTORY_SEPARATOR."$log_item[hint].log" : $def_fl;
@@ -123,7 +123,7 @@ abstract class Build
         foreach ($this->log as $item) {
             $fname = $this->getLogFilename($path, $item, $def_fl, $logs);
 
-            if (file_put_contents($fname, "$item[msg]\n", FILE_APPEND) != \strlen($item['msg']) + 1) {
+            if (file_put_contents($fname, "$item[msg]\n", \FILE_APPEND) != \strlen($item['msg']) + 1) {
                 throw new \Exception("Couldn't write contents to '$fname'");
             }
         }
@@ -194,7 +194,7 @@ abstract class Build
         return 0 === $exitCode;
     }
 
-    protected function appendPkgConfigureOptions(&$configureOptions)
+    protected function appendPkgConfigureOptions(& $configureOptions)
     {
         $opt = $this->pkg->getConfigureOptions();
         if (isset($opt[$this->pkg->getName()])) {

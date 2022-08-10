@@ -115,7 +115,7 @@ class Version
                 // throw new \Exception("Could not read $header");
                 continue;
             }
-            if (preg_match($pat, $headerContent, $result) or preg_match($pat2, $headerContent, $result)) {
+            if (preg_match($pat, $headerContent, $result) || preg_match($pat2, $headerContent, $result)) {
                 // Remove any quote characters we may have matched on
                 $version = trim($result[1], '"');
 
@@ -148,7 +148,7 @@ class Version
 
         $this->package->replaceVersion((new VersionParser())->normalize($this->version), $this->version);
 
-        $len = file_put_contents($composer_json, json_encode($dumper->dump($this->package), JSON_PRETTY_PRINT));
+        $len = file_put_contents($composer_json, json_encode($dumper->dump($this->package), \JSON_PRETTY_PRINT));
 
         if (!$len) {
             throw new \Exception("Failed to update '$composer_json'");

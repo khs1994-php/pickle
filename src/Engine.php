@@ -46,7 +46,7 @@ class Engine
     {
         if (null == self::$instance) {
             if (!$phpcli) {
-                $phpcli = PHP_BINARY;
+                $phpcli = \PHP_BINARY;
             }
 
             if (\defined('HHVM_VERSION')) {

@@ -85,7 +85,7 @@ class Loader
             $message = '';
 
             foreach ($validator->getErrors() as $error) {
-                $message .= sprintf('[%s] %s', $error['property'], $error['message']).PHP_EOL;
+                $message .= sprintf('[%s] %s', $error['property'], $error['message']).\PHP_EOL;
             }
 
             throw new \RuntimeException($message);

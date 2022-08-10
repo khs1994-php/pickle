@@ -88,7 +88,7 @@ class Unix extends Abstracts\Package\Build implements Interfaces\Package\Build
         chdir($this->pkg->getSourceDir());
 
         /* XXX check sanity */
-        $configureOptions = $opts ? $opts : $this->prepareConfigOpts();
+        $configureOptions = $opts ?: $this->prepareConfigOpts();
 
         $configureOptions .= ' --enable-option-checking=fatal ';
 

@@ -47,7 +47,7 @@ class Dumper
      */
     public function dump(Interfaces\Package $package, $with_version = true)
     {
-        return json_encode((new Util\Dumper())->dump($package, $with_version), JSON_PRETTY_PRINT);
+        return json_encode((new Util\Dumper())->dump($package, $with_version), \JSON_PRETTY_PRINT);
     }
 
     /**

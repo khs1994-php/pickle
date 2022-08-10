@@ -81,7 +81,7 @@ class Binary implements Interfaces\Package\Release
         $this->composerJsonBak($this->pkg, true);
     }
 
-    protected function composerJsonBak(\Pickle\Base\Interfaces\Package $pkg, $restore = false)
+    protected function composerJsonBak(Interfaces\Package $pkg, $restore = false)
     {
         $composer_json_orig = $pkg->getRootDir().\DIRECTORY_SEPARATOR.'composer.json';
         $composer_json_bak = $pkg->getRootDir().\DIRECTORY_SEPARATOR.'.composer.json.orig';
@@ -271,7 +271,7 @@ class Binary implements Interfaces\Package\Release
          multiple DLLs be built. */
         $config_w32_path = $this->build->getPackage()->getSourceDir().\DIRECTORY_SEPARATOR.'config.w32';
         $config_w32 = file_get_contents($config_w32_path);
-        if (preg_match_all("/EXTENSION\s*\(\s*('|\")([a-z0-9_]+)('|\")\s*,/Sm", $config_w32, $m, PREG_SET_ORDER)) {
+        if (preg_match_all("/EXTENSION\s*\(\s*('|\")([a-z0-9_]+)('|\")\s*,/Sm", $config_w32, $m, \PREG_SET_ORDER)) {
             foreach ($m as $r) {
                 if (!\in_array($r[2], $ext_names)) {
                     $ext_names[] = $r[2];

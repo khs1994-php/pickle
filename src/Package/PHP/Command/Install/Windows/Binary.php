@@ -48,6 +48,7 @@ class Binary
     private $php;
     private $extName;
     private $extVersion;
+    private $extVersionByCLI;
     private $progress = null;
     private $input = null;
     private $output = null;
@@ -62,6 +63,11 @@ class Binary
         if (false !== strpos('//', $ext)) {
             $this->extensionPeclExists();
         }
+        $ext = explode('@', $ext);
+        if ($ext[1] ?? null) {
+            $this->extVersionByCLI = $ext[1];
+        }
+        $ext = $ext[0];
 
         $this->extName = $ext;
         $this->php = Engine::factory();
@@ -143,6 +149,14 @@ class Binary
         $baseUrl = 'https://windows.php.net/downloads/pecl/releases/';
         $baseSnapUrl = 'https://windows.php.net/downloads/pecl/snaps/';
 
+        if ('xdebug' === $extName) {
+            $fileToFind = 'php_'.$extName.'-'.$pkgVersion.'-'.$phpVersion.'-'.$phpVc.$phpZts.'-'.'x86_64'.'.dll';
+
+            $url = 'https://xdebug.org/files/'.$fileToFind;
+
+            return $url;
+        }
+
         if ($snap) {
             $baseUrl = $baseSnapUrl;
         }
@@ -179,6 +193,13 @@ class Binary
     private function uncompress($zipFile)
     {
         $this->createTempDir($this->extName);
+
+        if ('.dll' === substr($zipFile, -4)) {
+            copy($zipFile, $this->tempDir.'/php_xdebug.dll');
+
+            return;
+        }
+
         $this->cleanup();
         $zipArchive = new \ZipArchive();
         if (true !== $zipArchive->open($zipFile) || !$zipArchive->extractTo($this->tempDir)) {
@@ -210,10 +231,10 @@ class Binary
             [
                 'notification' => function ($notificationCode, $severity, $message, $messageCode, $bytesTransferred, $bytesMax) use ($progress) {
                     switch ($notificationCode) {
-                        case STREAM_NOTIFY_FILE_SIZE_IS:
+                        case \STREAM_NOTIFY_FILE_SIZE_IS:
                             $progress->start($bytesMax);
                             break;
-                        case STREAM_NOTIFY_PROGRESS:
+                        case \STREAM_NOTIFY_PROGRESS:
                             $progress->setProgress($bytesTransferred);
                             break;
                     }
@@ -227,7 +248,13 @@ class Binary
             throw new \Exception('Cannot fetch <'.$url.'>');
         }
         $tmpdir = Util\TmpDir::get();
-        $path = $tmpdir.'/'.$this->extName.'.zip';
+
+        if ('.dll' === substr($url, -4)) {
+            $path = $tmpdir.'/'.$this->extName.'.dll';
+        } else {
+            $path = $tmpdir.'/'.$this->extName.'.zip';
+        }
+
         if (!file_put_contents($path, $fileContents)) {
             throw new \Exception('Cannot save temporary file <'.$path.'>');
         }
@@ -319,6 +346,9 @@ class Binary
     public function install()
     {
         list($this->extName, $this->extVersion) = $this->getInfoFromPecl();
+        if ($this->extVersionByCLI) {
+            $this->extVersion = $this->extVersionByCLI;
+        }
         $url = $this->fetchZipName();
         $pathArchive = $this->download($url);
         $this->uncompress($pathArchive);

@@ -46,8 +46,8 @@ class Ini
     protected $pickleFooterStartPos = -1;
     protected $pickleFooterEndPos = -1;
 
-    const PICKLE_HEADER = ';Pickle installed extension, do not edit this line and below';
-    const PICKLE_FOOTER = ';Pickle installed extension, do not edit this line and above';
+    public const PICKLE_HEADER = ';Pickle installed extension, do not edit this line and below';
+    public const PICKLE_FOOTER = ';Pickle installed extension, do not edit this line and above';
 
     public function __construct(\Pickle\Base\Interfaces\Engine $php)
     {

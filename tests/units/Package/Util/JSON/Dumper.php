@@ -57,7 +57,7 @@ class Dumper extends atoum
                     'name' => $name,
                     'version' => $version,
                     'type' => $type,
-                ], JSON_PRETTY_PRINT))
+                ], \JSON_PRETTY_PRINT))
             ->given(
                 $license = uniqid(),
                 $authors = [
@@ -91,7 +91,7 @@ class Dumper extends atoum
                     'description' => $description,
                     'support' => $support,
                     'extra' => $extra,
-                ], JSON_PRETTY_PRINT))
+                ], \JSON_PRETTY_PRINT))
         ;
     }
 
@@ -118,7 +118,7 @@ class Dumper extends atoum
                         'name' => $name,
                         'version' => $version,
                         'type' => $type,
-                    ], JSON_PRETTY_PRINT))->once
+                    ], \JSON_PRETTY_PRINT))->once
         ;
     }
 }

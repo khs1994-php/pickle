@@ -76,7 +76,7 @@ class Ini extends Abstracts\Engine\Ini implements Interfaces\Engine\Ini
             requested to be deleted and not already added. */
         foreach ($lines as $l) {
             $l = trim($l);
-            if (0 !== strpos($l, 'extension') and 0 !== strpos($l, 'zend_extension')) {
+            if (0 !== strpos($l, 'extension') && 0 !== strpos($l, 'zend_extension')) {
                 // 不是以 extension 和 zend_extension 开头
                 continue;
             }
@@ -241,7 +241,7 @@ class Ini extends Abstracts\Engine\Ini implements Interfaces\Engine\Ini
         $major = $engine->getMajorVersion();
         $minor = $engine->getMinorVersion();
 
-        if (($major >= 7 && $minor >= 2) or $major > 7) {
+        if (($major >= 7 && $minor >= 2) || $major > 7) {
             return true;
         }
 

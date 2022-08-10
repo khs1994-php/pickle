@@ -37,7 +37,7 @@ namespace Pickle\Base\Interfaces;
 
 interface Engine
 {
-    public function __construct($phpCli = PHP_BINARY);
+    public function __construct($phpCli = \PHP_BINARY);
 
     public function getName();
 

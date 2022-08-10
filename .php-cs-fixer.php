@@ -8,8 +8,9 @@ $finder = PhpCsFixer\Finder::create()
     // ->notPath('src/Symfony/Component/Translation/Tests/fixtures/resources.php')
     ->in(__DIR__)
     ->ignoreVCS(true);
-return PhpCsFixer\Config::create()
-    ->setRules([
+$config = new PhpCsFixer\Config();
+
+return $config->setRules([
       '@Symfony' => true,
       '@Symfony:risky'=>true,
       'array_syntax' => array('syntax' => 'short'),

@@ -158,7 +158,7 @@ class Package extends Abstracts\Package implements \Pickle\Base\Interfaces\Packa
             $option = substr($config, $s + 1, $e - $s);
 
             $elems = explode(',', $option);
-            array_walk($elems, function (&$a) {
+            array_walk($elems, function (& $a) {
                 $a = str_replace([')', "'"], ['', ''], $a);
                 $a = trim($a);
             });

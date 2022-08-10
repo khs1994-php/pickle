@@ -6,7 +6,7 @@ use Composer;
 
 class Config extends Composer\Config
 {
-    const DEFAULT_BASE_DIRNAME = '.pickle';
+    public const DEFAULT_BASE_DIRNAME = '.pickle';
 
     public function __construct($useEnvironment = true, $baseDir = null)
     {

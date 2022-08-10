@@ -39,14 +39,14 @@ use Composer\Package\Version\VersionParser;
 
 class Type
 {
-    const PICKLE = 'pickle';
-    const PECL = 'pecl';
-    const GIT = 'git';
-    const TGZ = 'tgz';
-    const SRC_DIR = 'srcdir';
-    const ANY = 'any';
+    public const PICKLE = 'pickle';
+    public const PECL = 'pecl';
+    public const GIT = 'git';
+    public const TGZ = 'tgz';
+    public const SRC_DIR = 'srcdir';
+    public const ANY = 'any';
 
-    public static function match($regs, $arg, &$matches)
+    public static function match($regs, $arg, & $matches)
     {
         foreach ($regs as $reg) {
             $ret = preg_match($reg, $arg, $matches);
@@ -58,7 +58,7 @@ class Type
         return 0;
     }
 
-    public static function determinePickle($arg, &$matches)
+    public static function determinePickle($arg, & $matches)
     {
         $versionParser = new VersionParser();
         $res = $versionParser->parseNameVersionPairs([$arg]);
@@ -74,7 +74,7 @@ class Type
         return 1;
     }
 
-    public static function determinePecl($arg, &$matches)
+    public static function determinePecl($arg, & $matches)
     {
         $reg0 = '#^
             (?:pecl/)?
@@ -96,7 +96,7 @@ class Type
     }
 
     /* XXX definitely needs a serious improvement */
-    public static function determineGit($arg, &$matches)
+    public static function determineGit($arg, & $matches)
     {
         $reg0 = '#^
             (?:git|https|http|ssh|rsync|file?)(://|@).*?(/|\:)

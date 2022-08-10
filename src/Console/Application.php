@@ -6,8 +6,8 @@ use Symfony\Component\Console\Application as BaseApplication;
 
 class Application extends BaseApplication
 {
-    const NAME = 'pickle';
-    const VERSION = '@pickle-version@';
+    public const NAME = 'pickle';
+    public const VERSION = '@pickle-version@';
 
     public function __construct($name = null, $version = null)
     {
@@ -57,7 +57,7 @@ class Application extends BaseApplication
 
         foreach ($required_exts as $ext) {
             if (!\extension_loaded($ext)) {
-                die("Extension '$ext' required but not loaded, full required list: ".implode(', ', $required_exts));
+                exit("Extension '$ext' required but not loaded, full required list: ".implode(', ', $required_exts));
             }
         }
     }

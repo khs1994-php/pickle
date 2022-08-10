@@ -55,10 +55,10 @@ class PHP extends Abstracts\Engine implements Interfaces\Engine
     private $extensionDir;
     private $hasSdk;
     private $iniDir;
-    public  $isWindows = false;
+    public $isWindows = false;
     private $prefix = '';
 
-    public function __construct($phpCli = PHP_BINARY)
+    public function __construct($phpCli = \PHP_BINARY)
     {
         if (!(is_file($phpCli) && is_executable($phpCli))) {
             throw new \Exception("Invalid php executable: $phpCli");
@@ -180,7 +180,7 @@ class PHP extends Abstracts\Engine implements Interfaces\Engine
         foreach ($info as $s) {
             if (false !== strpos($s, 'PHP Extension Build')) {
                 list(, $compiler) = explode('=>', $s);
-                list(,,$compiler) = explode(',',$compiler);
+                list(, , $compiler) = explode(',', $compiler);
                 break;
             }
         }

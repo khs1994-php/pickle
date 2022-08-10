@@ -139,7 +139,7 @@ abstract class BuildCommand extends Command
                 if ('enable' == $opt->type) {
                     $prompt = new ConfirmationQuestion($opt->prompt.' (default: '.($opt->default ? 'yes' : 'no').'): ', $opt->default);
                 } else {
-                    $prompt = new Question($opt->prompt.' (default: '.($opt->default ? $opt->default : '').'): ', $opt->default);
+                    $prompt = new Question($opt->prompt.' (default: '.($opt->default ?: '').'): ', $opt->default);
                 }
 
                 $value = $helper->ask($input, $output, $prompt);

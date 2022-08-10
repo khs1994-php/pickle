@@ -44,7 +44,7 @@ define('PICKLE_TEST_PATH', sys_get_temp_dir().'/pickle');
  */
 class FeatureContext implements SnippetAcceptingContext
 {
-    const PICKLE_BIN = 'bin/pickle';
+    public const PICKLE_BIN = 'bin/pickle';
 
     private $assert;
     private $php;
@@ -73,7 +73,7 @@ class FeatureContext implements SnippetAcceptingContext
      */
     public function prepare()
     {
-        $this->dir = PICKLE_TEST_PATH.DIRECTORY_SEPARATOR.md5(microtime() * rand(0, 10000));
+        $this->dir = PICKLE_TEST_PATH.\DIRECTORY_SEPARATOR.md5(microtime() * rand(0, 10000));
 
         $phpFinder = new PhpExecutableFinder();
         if (false === $php = $phpFinder->find()) {
@@ -145,13 +145,13 @@ class FeatureContext implements SnippetAcceptingContext
     {
         if ('fail' === $success) {
             if (0 === $this->getExitCode()) {
-                echo 'Actual output:'.PHP_EOL.PHP_EOL.$this->getOutput();
+                echo 'Actual output:'.\PHP_EOL.\PHP_EOL.$this->getOutput();
             }
 
             $this->assert->integer($this->getExitCode())->isGreaterThan(0);
         } else {
             if (0 !== $this->getExitCode()) {
-                echo 'Actual output:'.PHP_EOL.PHP_EOL.$this->getOutput();
+                echo 'Actual output:'.\PHP_EOL.\PHP_EOL.$this->getOutput();
             }
 
             $this->assert->integer($this->getExitCode())->isZero;
@@ -196,8 +196,8 @@ class FeatureContext implements SnippetAcceptingContext
 
         $fileContent = trim(file_get_contents($path));
         // Normalize the line endings in the output
-        if ("\n" !== PHP_EOL) {
-            $fileContent = str_replace(PHP_EOL, "\n", $fileContent);
+        if ("\n" !== \PHP_EOL) {
+            $fileContent = str_replace(\PHP_EOL, "\n", $fileContent);
         }
 
         $this->assert->string($fileContent)->isEqualTo($this->getExpectedOutput($text));
@@ -240,8 +240,8 @@ class FeatureContext implements SnippetAcceptingContext
         $output = $this->process->getErrorOutput().$this->process->getOutput();
 
         // Normalize the line endings in the output
-        if ("\n" !== PHP_EOL) {
-            $output = str_replace(PHP_EOL, "\n", $output);
+        if ("\n" !== \PHP_EOL) {
+            $output = str_replace(\PHP_EOL, "\n", $output);
         }
 
         return trim(preg_replace('/ +$/m', '', $output));
@@ -268,7 +268,7 @@ class FeatureContext implements SnippetAcceptingContext
         array_shift($files);
 
         foreach ($files as $file) {
-            $file = $path.DIRECTORY_SEPARATOR.$file;
+            $file = $path.\DIRECTORY_SEPARATOR.$file;
             if (is_dir($file)) {
                 self::clearDirectory($file);
             } else {

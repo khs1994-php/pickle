@@ -43,13 +43,13 @@ use Pickle\Engine\Ini;
 use Pickle\Package\Command\Install;
 use Pickle\Package\Util\Windows;
 use Symfony\Component\Console\Command\Command;
+use Symfony\Component\Console\Helper\ProgressBar;
 use Symfony\Component\Console\Helper\Table;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Question\ChoiceQuestion;
 use Symfony\Component\Console\Question\ConfirmationQuestion;
-use Symfony\Component\Console\Helper\ProgressBar;
 
 class InstallerCommand extends BuildCommand
 {
@@ -247,6 +247,8 @@ class InstallerCommand extends BuildCommand
         if ('opcache' === $path) {
             $path = 'Zend OPcache';
         }
+
+        [$path,] = explode('@', $path);
 
         if ($input->getOption('php')) {
             // 指定了 PHP, 检查该 PHP

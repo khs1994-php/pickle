@@ -123,7 +123,7 @@ class Windows extends Abstracts\Package\Build implements Interfaces\Package\Buil
         chdir($this->tempDir);
 
         /* XXX check sanity */
-        $configureOptions = $opts ? $opts : $this->prepareConfigOpts();
+        $configureOptions = $opts ?: $this->prepareConfigOpts();
 
         $res = $this->runCommand($this->pkg->getSourceDir().'/configure '.$configureOptions);
         chdir($backCwd);

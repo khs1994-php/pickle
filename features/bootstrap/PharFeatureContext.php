@@ -34,5 +34,5 @@
  */
 class PharFeatureContext extends FeatureContext
 {
-    const PICKLE_BIN = 'pickle.phar';
+    public const PICKLE_BIN = 'pickle.phar';
 }

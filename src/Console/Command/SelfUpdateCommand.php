@@ -10,7 +10,7 @@ use Symfony\Component\Console\Output\OutputInterface;
 
 class SelfUpdateCommand extends Command
 {
-    const PHAR_NAME = 'pickle.phar';
+    public const PHAR_NAME = 'pickle.phar';
 
     protected function configure()
     {

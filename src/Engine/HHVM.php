@@ -40,7 +40,7 @@ use Pickle\Base\Interfaces;
 
 class HHVM extends Abstracts\Engine implements Interfaces\Engine
 {
-    public function __construct($phpCli = PHP_BINARY)
+    public function __construct($phpCli = \PHP_BINARY)
     {
     }
 
@@ -61,7 +61,7 @@ class HHVM extends Abstracts\Engine implements Interfaces\Engine
 
     public function getPath()
     {
-        return PHP_BINARY;
+        return \PHP_BINARY;
     }
 
     public function getVersion()
