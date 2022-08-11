@@ -104,7 +104,7 @@ class HHVM extends Abstracts\Engine implements Interfaces\Engine
 
     public function getExtensionDir()
     {
-        return ini_get('extension_dir');
+        return \ini_get('extension_dir');
     }
 
     public function getIniPath()

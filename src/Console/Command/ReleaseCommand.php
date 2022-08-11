@@ -93,7 +93,7 @@ class ReleaseCommand extends BuildCommand
         };
         $path = rtrim($input->getArgument('path'), '/\\');
 
-        /* Getting package unpacked first, then use the path*/
+        /* Getting package unpacked first, then use the path */
         $package = $this->getHelper('package')->convey($input, $output, $path);
 
         $release = Release::factory($package->getRootDir(), $cb, $input->getOption('no-convert'), $input->getOption('binary'));

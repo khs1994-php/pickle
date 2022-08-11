@@ -37,8 +37,8 @@ namespace Pickle\Package\Util\Windows;
 
 use Pickle\Base\Util;
 use Pickle\Base\Util\FileOps;
-use Symfony\Component\Console\Input\InputInterface as InputInterface;
-use Symfony\Component\Console\Output\OutputInterface as OutputInterface;
+use Symfony\Component\Console\Input\InputInterface;
+use Symfony\Component\Console\Output\OutputInterface;
 
 class DependencyLib
 {

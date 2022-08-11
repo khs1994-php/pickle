@@ -158,7 +158,7 @@ class Package extends Abstracts\Package implements \Pickle\Base\Interfaces\Packa
             $option = substr($config, $s + 1, $e - $s);
 
             $elems = explode(',', $option);
-            array_walk($elems, function (& $a) {
+            array_walk($elems, function (&$a) {
                 $a = str_replace([')', "'"], ['', ''], $a);
                 $a = trim($a);
             });
@@ -319,9 +319,9 @@ class Package extends Abstracts\Package implements \Pickle\Base\Interfaces\Packa
     protected function locateSourceDirByExtConfig($path)
     {
         $it = new \RecursiveIteratorIterator(
-        new \RecursiveDirectoryIterator($path),
-        \RecursiveIteratorIterator::SELF_FIRST
-    );
+            new \RecursiveDirectoryIterator($path),
+            \RecursiveIteratorIterator::SELF_FIRST
+        );
 
         foreach ($it as $fl_obj) {
             if ($fl_obj->isFile() && preg_match(',config*.(m4|w32),', $fl_obj->getBasename())) {

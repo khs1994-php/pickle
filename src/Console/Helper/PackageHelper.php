@@ -103,7 +103,7 @@ class PackageHelper extends Helper
     public function convey(InputInterface $input, OutputInterface $output, $path, $target = null)
     {
         $helperSet = $this->getHelperSet();
-        $io = new ConsoleIO($input, $output, ($helperSet ?: new HelperSet()));
+        $io = new ConsoleIO($input, $output, $helperSet ?: new HelperSet());
 
         $no_convert = $input->hasOption('no-convert') ? $input->getOption('no-convert') : false;
 

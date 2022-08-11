@@ -62,7 +62,7 @@ class Version
 
     protected function findHeaders()
     {
-        //$header = $this->package->getSourceDir().DIRECTORY_SEPARATOR.'php_'.$this->package->getSimpleName().'.h';
+        // $header = $this->package->getSourceDir().DIRECTORY_SEPARATOR.'php_'.$this->package->getSimpleName().'.h';
 
         if (!file_exists($header) || !$this->fileHasVersionMacro($header)) {
             $headers = (array) glob($this->package->getSourceDir().\DIRECTORY_SEPARATOR.'*.h');

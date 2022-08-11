@@ -81,7 +81,7 @@ class Ini extends atoum
 
     public function testupdatePickleSection_nofooter()
     {
-        /* missing pickle section footer*/
+        /* missing pickle section footer */
         $f = FIXTURES_DIR.\DIRECTORY_SEPARATOR.'ini'.\DIRECTORY_SEPARATOR.'php.ini.only.sect.begin';
         $this->do_testupdatePickleSection($f);
     }

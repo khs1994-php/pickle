@@ -84,11 +84,11 @@ abstract class Build
         return implode("\n", $ret);
     }
 
-    protected function prepareSaveLog($path, & $def_fl)
+    protected function prepareSaveLog($path, &$def_fl)
     {
         if ($path && !is_dir($path)) {
             if (!mkdir($path)) {
-                throw new \EXception("Location '$path' could not be created, unable to save build logs");
+                throw new \Exception("Location '$path' could not be created, unable to save build logs");
             }
         }
 
@@ -98,7 +98,7 @@ abstract class Build
         }
     }
 
-    protected function getLogFilename($path, $log_item, $def_fl, array & $logs)
+    protected function getLogFilename($path, $log_item, $def_fl, array &$logs)
     {
         $is_hint = (isset($log_item['hint']) && !empty($log_item['hint']));
         $fname = $is_hint ? $path.\DIRECTORY_SEPARATOR."$log_item[hint].log" : $def_fl;
@@ -153,7 +153,7 @@ abstract class Build
         $no_hint_logs = '';
         foreach ($this->log as $item) {
             $msg = $this->fixEol($item['msg']);
-            if ((isset($item['hint']) && !empty($item['hint']))) {
+            if (isset($item['hint']) && !empty($item['hint'])) {
                 $zip->addFromString("$item[hint].log", $msg);
             } else {
                 $no_hint_logs = "$no_hint_logs\n\n$msg";
@@ -194,7 +194,7 @@ abstract class Build
         return 0 === $exitCode;
     }
 
-    protected function appendPkgConfigureOptions(& $configureOptions)
+    protected function appendPkgConfigureOptions(&$configureOptions)
     {
         $opt = $this->pkg->getConfigureOptions();
         if (isset($opt[$this->pkg->getName()])) {

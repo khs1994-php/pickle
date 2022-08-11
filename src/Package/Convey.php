@@ -50,7 +50,7 @@ class Convey
             throw new \Exception('Path cannot be empty');
         }
 
-        $type = Type::determine($path, (false === realpath($path)));
+        $type = Type::determine($path, false === realpath($path));
         $this->command = Factory::getCommand($type, $path, $io);
     }
 

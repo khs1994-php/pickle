@@ -57,12 +57,12 @@ class ConvertChangeLog
         $xml = @simplexml_load_file($this->path);
 
         $changelog = [];
-        $current = new \StdClass();
+        $current = new \stdClass();
         $current->date = $xml->date;
         $current->time = $xml->time;
-        $current->version = new \StdClass();
+        $current->version = new \stdClass();
         $current->version->release = $xml->version->release;
-        $current->stability = new \StdClass();
+        $current->stability = new \stdClass();
         $current->stability->release = $xml->stability->release;
         $current->notes = $xml->notes;
 

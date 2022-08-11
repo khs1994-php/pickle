@@ -84,7 +84,7 @@ class Type extends atoum
                 ->isIdenticalTo(Command\Type::PECL)
             ->string(Command\Type::determine('pecl/hello@1.2', true))
                 ->isIdenticalTo(Command\Type::PECL)
-                ;
+        ;
 
         /* XXX fix version tests */
     }
@@ -110,7 +110,7 @@ class Type extends atoum
                 ->isIdenticalTo(Command\Type::GIT)
             ->string(Command\Type::determine('file:///path/to/repo.git#some_branch123', true))
                 ->isIdenticalTo(Command\Type::GIT)
-                ;
+        ;
     }
 
     public function test_determine_tgz()

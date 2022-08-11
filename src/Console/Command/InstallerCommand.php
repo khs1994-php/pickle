@@ -196,7 +196,7 @@ class InstallerCommand extends BuildCommand
         }
     }
 
-    /*  The most of this needs to be incapsulated into an extra Build class*/
+    /*  The most of this needs to be incapsulated into an extra Build class */
     protected function sourceInstall($package, InputInterface $input, OutputInterface $output, $optionsValue = [], $force_opts = '')
     {
         $php = Engine::factory();
@@ -318,8 +318,8 @@ class InstallerCommand extends BuildCommand
             $output->writeln('<info>php_ini_dir [ '.$phpIniDir.' ] found, write ini</info>');
 
             $ini->updatePickleSectionOnLinux(
-              [$path.'.so'], $phpIniDir, $input->getOption('no-write')
-          );
+                [$path.'.so'], $phpIniDir, $input->getOption('no-write')
+            );
 
             return 0;
         }

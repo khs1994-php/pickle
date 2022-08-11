@@ -95,7 +95,7 @@ class PHP extends Abstracts\Engine implements Interfaces\Engine
         // if (defined('PHP_WINDOWS_VERSION_MAJOR')) {
         list($this->compiler, $this->architecture, $this->iniPath, $this->extensionDir, $this->iniDir) = $this->getFromPhpInfo();
         // } else {
-        /* TODO till now we didn't need his on linux*/
+        /* TODO till now we didn't need his on linux */
         // var_dump($this->getFromPhpInfo());
         // }
 
@@ -233,11 +233,11 @@ class PHP extends Abstracts\Engine implements Interfaces\Engine
 
         $iniDir = $this->getIniDirFromPhpInfo($info);
         $compiler = trim(
-        strtolower(
-            // str_replace('MS', '', substr(
+            strtolower(
+                // str_replace('MS', '', substr(
             //         $this->getCompilerFromPhpInfo($info), 0, 6)
             //     )
-            $this->getCompilerFromPhpInfo($info)
+                $this->getCompilerFromPhpInfo($info)
             )
         );
 
