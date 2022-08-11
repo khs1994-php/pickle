@@ -58,7 +58,7 @@ trait FileOps
 
     public function cleanup()
     {
-        if (is_dir($this->tempDir)) {
+        if (null !== $this->tempDir && is_dir($this->tempDir)) {
             $iterator = new \RecursiveIteratorIterator(
                 new \RecursiveDirectoryIterator(
                     $this->tempDir,
