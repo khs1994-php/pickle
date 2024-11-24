@@ -61,9 +61,9 @@ class Loader implements LoaderInterface
         if (isset($config['php-ext'])) {
             if (isset($config['version'])) {
                 $version = $this->versionParser->normalize($config['version']);
-                $package = Package::factory(((array) $config['php-ext'])['extension-name'], $version, $config['version'], true);
+                $package = Package::factory(str_replace('ext-', '', ((array) $config['php-ext'])['extension-name']), $version, $config['version'], true);
             } else {
-                $package = Package::factory(((array) $config['php-ext'])['extension-name'], '', '', true);
+                $package = Package::factory(str_replace('ext-', '', ((array) $config['php-ext'])['extension-name']), '', '', true);
             }
         } else {
             if (isset($config['version'])) {
