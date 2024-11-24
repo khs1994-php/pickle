@@ -58,15 +58,26 @@ class Loader implements LoaderInterface
      */
     public function load(array $config, $package = 'Pickle\Base\Interfaces\Package')
     {
-        if (isset($config['version'])) {
-            $version = $this->versionParser->normalize($config['version']);
-            $package = Package::factory($config['name'], $version, $config['version'], true);
+        if (isset($config['php-ext'])) {
+            if (isset($config['version'])) {
+                $version = $this->versionParser->normalize($config['version']);
+                $package = Package::factory(((array) $config['php-ext'])['extension-name'], $version, $config['version'], true);
+            } else {
+                $package = Package::factory(((array) $config['php-ext'])['extension-name'], '', '', true);
+            }
         } else {
-            $package = Package::factory($config['name'], '', '', true);
+            if (isset($config['version'])) {
+                $version = $this->versionParser->normalize($config['version']);
+                $package = Package::factory($config['name'], $version, $config['version'], true);
+            } else {
+                $package = Package::factory($config['name'], '', '', true);
+            }
         }
 
         if (isset($config['type']) && 'extension' != $config['type']) {
-            throw new \UnexpectedValueException($package->getName().' is not a extension(s) package');
+            if (isset($config['type']) && 'php-ext' != $config['type']) {
+                throw new \UnexpectedValueException($package->getName().' is not a extension(s) package');
+            }
         }
         $package->setType('extension');
 

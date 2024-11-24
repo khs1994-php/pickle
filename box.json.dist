@@ -29,6 +29,9 @@
                 "tests"
             ],
             "in": "vendor"
+        },
+        {
+            "name":"composer-schema.json"
         }
     ],
     "git-tag": "pickle-version",
