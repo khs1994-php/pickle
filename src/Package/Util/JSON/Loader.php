@@ -77,7 +77,7 @@ class Loader
 
     protected function validate($json)
     {
-        $schema = json_decode(file_get_contents(__DIR__.'/../../../../vendor/composer/composer/res/composer-schema.json'));
+        $schema = json_decode(file_get_contents(__DIR__.'/../../../../composer-schema.json'));
         $validator = new \JsonSchema\Validator();
         $validator->check($json, $schema);
 
