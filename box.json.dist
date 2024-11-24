@@ -31,7 +31,8 @@
             "in": "vendor"
         },
         {
-            "name":"composer-schema.json"
+            "name":"composer-schema.json",
+            "in":"/"
         }
     ],
     "git-tag": "pickle-version",
