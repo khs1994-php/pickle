@@ -74,9 +74,9 @@ class Loader implements LoaderInterface
             }
         }
 
-        if (isset($config['type']) && !\in_array($config['type'], ['extension', 'php-ext', 'php-ext-zend'])) {
-            throw new \UnexpectedValueException($package->getName().' is not a extension(s) package');
-        }
+        # if (isset($config['type']) && !\in_array($config['type'], ['extension', 'php-ext', 'php-ext-zend'])) {
+        #    throw new \UnexpectedValueException($package->getName().' is not a extension(s) package');
+        # }
         $package->setType('extension');
 
         $this->setPackageSource($package, $config);
