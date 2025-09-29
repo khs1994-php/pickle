@@ -13,7 +13,7 @@ jobs:
           set -ex
           export PATH=$(composer global config bin-dir --absolute --quiet):$PATH
           echo 'phar.readonly = Off' | sudo tee $(php-config --ini-dir)/zz-phar.ini
-          composer global require 'kherge/box=~2.4' --prefer-source
+          composer global require 'kherge/box=~2.4' --prefer-dist
           git tag nightly -f
           composer install --no-dev --optimize-autoloader \
           || composer install --no-dev --optimize-autoloader --ignore-platform-reqs
